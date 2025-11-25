@@ -1,0 +1,63 @@
+# ================================================
+# CONJUNTO EXTENSO DE PROCESOS PARA PRUEBAS COMPLETAS
+# ================================================
+
+# Proceso CPU-bound largo
+P1 0 CPU(12),E/S(4),CPU(10),E/S(3),CPU(8) 1 6
+
+# Proceso I/O-bound puro
+P2 1 E/S(3),CPU(2),E/S(3),CPU(2),E/S(3),CPU(2) 2 4
+
+# Proceso con ráfagas irregulares
+P3 2 CPU(4),E/S(2),CPU(6),E/S(3),CPU(4),E/S(2),CPU(5) 1 5
+
+# Proceso muy corto
+P4 3 CPU(3) 3 2
+
+# Proceso ligero con E/S al inicio
+P5 4 E/S(2),CPU(5),E/S(2),CPU(3) 2 4
+
+# CPU-bound muy grande para cargar páginas
+P6 5 CPU(20),E/S(5),CPU(18),E/S(4),CPU(15) 1 8
+
+# Proceso con ráfagas muy pequeñas (castiga RR)
+P7 6 CPU(1),E/S(1),CPU(1),E/S(1),CPU(1),E/S(1),CPU(1) 3 3
+
+# Alternancia simétrica
+P8 7 CPU(5),E/S(5),CPU(5),E/S(5),CPU(5) 2 5
+
+# Proceso intensivo en CPU medio
+P9 8 CPU(10),CPU(8),CPU(6) 1 6
+
+# Proceso con ráfagas cortas repetitivas
+P10 9 CPU(2),E/S(2),CPU(2),E/S(2),CPU(2),E/S(2),CPU(2) 3 4
+
+# Proceso pesado en E/S
+P11 10 E/S(5),CPU(3),E/S(6),CPU(3),E/S(5) 2 5
+
+# Proceso con CPU moderado
+P12 11 CPU(6),E/S(3),CPU(6) 1 4
+
+# Proceso muy largo (estrés total)
+P13 12 CPU(25),E/S(5),CPU(20),E/S(5),CPU(18) 1 10
+
+# Proceso que casi no usa E/S
+P14 13 CPU(7),CPU(5),CPU(6) 2 5
+
+# Alternancia muy rápida (ideal para RR)
+P15 14 CPU(1),E/S(1),CPU(1),E/S(1),CPU(1),E/S(1),CPU(1),E/S(1) 3 3
+
+# Proceso centrado en cargas pequeñas de CPU
+P16 15 CPU(3),E/S(3),CPU(3),E/S(3) 2 4
+
+# Proceso grande pero disperso
+P17 16 CPU(9),E/S(2),CPU(4),E/S(2),CPU(9),E/S(3),CPU(6) 1 7
+
+# Proceso con patrón extraño (valioso para Optimal)
+P18 17 CPU(5),CPU(1),CPU(5),E/S(4),CPU(1),CPU(5) 2 6
+
+# Proceso de prueba con ráfagas muy largas
+P19 18 CPU(15),CPU(15),E/S(3),CPU(10) 1 8
+
+# Proceso que genera muchos context switches
+P20 19 CPU(2),E/S(1),CPU(2),E/S(1),CPU(2),E/S(1),CPU(2),E/S(1),CPU(2) 3 4

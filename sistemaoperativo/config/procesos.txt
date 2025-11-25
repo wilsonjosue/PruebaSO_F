@@ -1,0 +1,28 @@
+# Configuración de procesos para el simulador
+# Formato: PID ArrivalTime Bursts Priority Pages
+# Ejemplo: P1 0 CPU(4),E/S(3),CPU(5) 1 4
+#
+# Tipos de ráfaga: CPU, E/S (o IO)
+# PID: Identificador único del proceso
+# ArrivalTime: Tiempo de llegada al sistema
+# Bursts: Secuencia de ráfagas CPU y E/S separadas por comas
+# Priority: Prioridad del proceso (menor = mayor prioridad)
+# Pages: Número de páginas requeridas en memoria
+
+# CASO GENERAL: Procesos con ráfagas mixtas de CPU y E/S
+# Demuestra el manejo completo del sistema
+
+# Proceso con múltiples ráfagas alternadas
+P1 0 CPU(5),E/S(4),CPU(3),E/S(2),CPU(4) 1 4
+
+# Proceso que llega después, balanceado
+P2 1 CPU(3),E/S(3),CPU(2),E/S(2),CPU(3) 2 5
+
+# Proceso con menos E/S, más CPU
+P3 2 CPU(7),E/S(2),CPU(5) 1 6
+
+# Proceso con muchas operaciones cortas
+P4 3 CPU(4),E/S(3),CPU(3),E/S(1),CPU(2) 3 4
+
+# Proceso ligero
+P5 4 CPU(2),E/S(2),CPU(3),E/S(1),CPU(2) 2 3

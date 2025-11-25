@@ -1,0 +1,141 @@
+╔══════════════════════════════════════════════════════════════╗
+║              SIMULADOR DE SISTEMAS OPERATIVOS                ║
+╚══════════════════════════════════════════════════════════════╝
+
+┌──────────────────────────────────────────────────────────────┐
+│   ESTADO: EN PROCESO                                         │
+└──────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════
+  COMPONENTES IMPLEMENTADOS
+═══════════════════════════════════════════════════════════════
+
+MODELOS DE DATOS
+  ✓ Process.java          - Gestión completa de procesos
+  ✓ Burst.java            - Ráfagas CPU/IO con tiempo restante
+
+ALGORITMOS DE PLANIFICACIÓN
+  ✓ FCFSScheduler.java    - First-Come, First-Served
+  ✓ SJFScheduler.java     - Shortest Job First
+  ✓ RoundRobinScheduler   - Con quantum configurable
+
+ESTRUCTURA
+  ✓ ProcessDispatcher     - Motor de simulación unidad x unidad
+  ✓ PerformanceMetrics    - Sistema centralizado de métricas
+  ✓ GanttChart           - Visualización de ejecución
+  ✓ SimulationClock      - Reloj sincronizado thread-safe
+  ✓ ReadyQueue           - Cola con locks (ReentrantLock)
+  ✓ SchedulerFactory     - Factory pattern
+
+PRUEBAS UNITARIAS
+  ✓ TestFCFS.java        - Verifica FCFS con valores esperados
+  ✓ TestSJF.java         - Verifica SJF con optimización
+  ✓ TestRoundRobin.java  - Verifica RR con quantum y contexto
+  ✓ TestIntegration.java - Comparación de los 3 algoritmos
+
+
+═══════════════════════════════════════════════════════════════
+  PENDIENTES
+═══════════════════════════════════════════════════════════════
+
+
+
+═══════════════════════════════════════════════════════════════
+  RESULTADOS DE PRUEBAS
+═══════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────┐
+│  TEST FCFS                                                  │
+├─────────────────────────────────────────────────────────────┤
+│  Orden: P1 → P2 → P3                                        │
+│  Tiempo espera promedio: 3.33 unidades                      │
+│  Tiempo retorno promedio: 7.33 unidades                     │
+│  Sin apropiación                                            │
+└─────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│  TEST SJF                                                   │
+├─────────────────────────────────────────────────────────────┤
+│  Orden: P1 → P2 → P3 (P2 más corto ejecuta segundo)         │
+│  Tiempo espera promedio: 5.33 unidades                      │
+│  Tiempo retorno promedio: 10.67 unidades                    │
+│  Sin apropiación                                            │
+└─────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│  TEST ROUND ROBIN                                           │
+├─────────────────────────────────────────────────────────────┤
+│  Quantum: 2 unidades                                        │
+│  Secuencia: P1→P2→P1→P3→P2→P1                               │
+│  Tiempo espera promedio: 4.67 unidades                      │
+│  Tiempo respuesta promedio: 1.67 unidades (bajo)            │
+│  Context switches: 3                                        │
+│  Con apropiación                                            │
+└─────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│  TEST INTEGRACIÓN                                           │
+├─────────────────────────────────────────────────────────────┤
+│  Comparación de 3 algoritmos                                │
+│  Procesos con múltiples ráfagas (CPU + I/O)                 │
+│  Diagramas de Gantt correctos                               │
+│  Métricas coherentes                                        │
+└─────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════
+  MÉTRICAS CALCULADAS
+═══════════════════════════════════════════════════════════════
+
+Para cada proceso se calcula:
+  • Tiempo de Espera     = Tiempo Retorno - Tiempo CPU
+  • Tiempo de Retorno    = Tiempo Final - Tiempo Llegada
+  • Tiempo de Respuesta  = Primera Ejecución - Tiempo Llegada
+
+
+═══════════════════════════════════════════════════════════════
+  DIAGRAMA DE GANTT (Ejemplo FCFS)
+═══════════════════════════════════════════════════════════════
+
+=== DIAGRAMA DE GANTT ===
+Tiempo:  | 0  | 5  | 8  | 12 |
+Proceso: | P1 | P2 | P3 |
+
+
+═══════════════════════════════════════════════════════════════
+  ARQUITECTURA
+═══════════════════════════════════════════════════════════════
+
+┌────────────────────────────────────────────────────────────┐
+│                      ProcessDispatcher                     │
+│                    (Motor de simulación)                   │
+└────────────────────────────────────────────────────────────┘
+                           │
+                           ├─────────────────┐
+                           │                 │
+                    ┌──────▼──────┐   ┌─────▼──────┐
+                    │  Scheduler  │   │   Metrics  │
+                    │ (FCFS/SJF/  │   │ (Cálculos) │
+                    │     RR)     │   │            │
+                    └─────────────┘   └────────────┘
+                           │
+                    ┌──────▼──────┐
+                    │  ReadyQueue │
+                    │   (Locks)   │
+                    └─────────────┘
+                           │
+                    ┌──────▼──────┐
+                    │  Processes  │
+                    │  (P1,P2,P3) │
+                    └─────────────┘
+
+═══════════════════════════════════════════════════════════════
+  ESTADOS DE PROCESOS
+═══════════════════════════════════════════════════════════════
+
+    NEW → READY → RUNNING → TERMINATED
+             ↑       ↓
+             └─ BLOCKED_IO
+
+
+═══════════════════════════════════════════════════════════════
+

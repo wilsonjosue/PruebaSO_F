@@ -1,0 +1,9 @@
+# CASO CRÍTICO: CPU BOUND vs I/O BOUND
+# P1 y P2 son CPU-intensive (solo CPU)
+# P3 y P4 son I/O-intensive (muchas operaciones E/S)
+# Demuestra baja utilización de CPU con muchos procesos I/O-bound
+
+P1 0 CPU(15) 1 4
+P2 1 CPU(12) 2 3
+P3 2 CPU(2),E/S(3),CPU(2),E/S(3),CPU(2) 1 2
+P4 3 CPU(1),E/S(4),CPU(1),E/S(4),CPU(1) 2 2

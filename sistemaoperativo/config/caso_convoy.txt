@@ -1,0 +1,8 @@
+# CASO CRÍTICO: CONVOY EFFECT (FCFS)
+# Un proceso largo al inicio hace esperar a procesos cortos
+# Con FCFS: Espera promedio alta
+# Con SJF: Espera promedio baja (ejecuta cortos primero)
+
+P1 0 CPU(20) 1 5
+P2 1 CPU(3) 2 3
+P3 2 CPU(2) 3 2

@@ -1,0 +1,406 @@
+package model;
+
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.Condition;
+
+/**
+ * Representa un proceso en el sistema operativo simulado
+ * Implementa Runnable para ejecutar como hilo independiente
+ */
+public class Process implements Runnable {
+  private String pid;
+  private int arrivalTime;
+  private List<Burst> bursts;
+  private int currentBurstIndex;
+  private int priority;
+  private int requiredPages;
+  private ProcessState state;
+  
+  // Memoria virtual
+  private Set<Integer> pageIds; // IDs de páginas que requiere este proceso
+  private Set<Integer> loadedPages; // Páginas actualmente en memoria
+  
+  // Sincronización
+  private Lock lock;
+  private Condition memoryAvailable;
+  private Condition ioComplete;
+  private volatile boolean memoryReady;
+  private volatile boolean ioReady;
+  
+  // Métricas de ejecución
+  private int completionTime;
+  private int waitingTime;
+  private int turnaroundTime;
+  private int responseTime;
+  private int firstExecutionTime;
+
+  public enum ProcessState {
+    NEW, READY, RUNNING, BLOCKED_MEMORY, BLOCKED_IO, TERMINATED
+  }
+
+  public Process(String pid, int arrivalTime, List<Burst> bursts, int priority, int requiredPages) {
+    this.pid = pid;
+    this.arrivalTime = arrivalTime;
+    this.bursts = new ArrayList<>(bursts);
+    this.currentBurstIndex = 0;
+    this.priority = priority;
+    this.requiredPages = requiredPages;
+    this.state = ProcessState.NEW;
+    
+    // Inicializar páginas (IDs consecutivos desde 0)
+    this.pageIds = new HashSet<>();
+    this.loadedPages = new HashSet<>();
+    for (int i = 0; i < requiredPages; i++) {
+      pageIds.add(i);
+    }
+    
+    // Inicializar sincronización
+    this.lock = new ReentrantLock();
+    this.memoryAvailable = lock.newCondition();
+    this.ioComplete = lock.newCondition();
+    this.memoryReady = false;
+    this.ioReady = true;
+    
+    // Inicializar métricas
+    this.completionTime = -1;
+    this.waitingTime = 0;
+    this.turnaroundTime = 0;
+    this.responseTime = -1;
+    this.firstExecutionTime = -1;
+  }
+
+  @Override
+  public void run() {
+    // La ejecución real se controla desde el ProcessDispatcher
+    // Este método se llama cuando el hilo es iniciado
+    System.out.println("Hilo del proceso " + pid + " iniciado");
+  }
+  
+  // Métodos de sincronización
+  
+  /**
+   * Espera hasta que la memoria esté disponible para este proceso
+   */
+  public void waitForMemory() throws InterruptedException {
+    lock.lock();
+    try {
+      while (!memoryReady) {
+        memoryAvailable.await();
+      }
+    } finally {
+      lock.unlock();
+    }
+  }
+  
+  /**
+   * Notifica que la memoria está lista para este proceso
+   */
+  public void signalMemoryReady() {
+    lock.lock();
+    try {
+      memoryReady = true;
+      memoryAvailable.signalAll();
+    } finally {
+      lock.unlock();
+    }
+  }
+  
+  /**
+   * Espera hasta que la operación de E/S se complete
+   */
+  public void waitForIO() throws InterruptedException {
+    lock.lock();
+    try {
+      while (!ioReady) {
+        ioComplete.await();
+      }
+    } finally {
+      lock.unlock();
+    }
+  }
+  
+  /**
+   * Notifica que la operación de E/S se completó
+   */
+  public void signalIOComplete() {
+    lock.lock();
+    try {
+      ioReady = true;
+      ioComplete.signalAll();
+    } finally {
+      lock.unlock();
+    }
+  }
+  
+  /**
+   * Resetea el estado de memoria
+   */
+  public void resetMemoryReady() {
+    lock.lock();
+    try {
+      memoryReady = false;
+    } finally {
+      lock.unlock();
+    }
+  }
+  
+  /**
+   * Resetea el estado de E/S
+   */
+  public void resetIOReady() {
+    lock.lock();
+    try {
+      ioReady = false;
+    } finally {
+      lock.unlock();
+    }
+  }
+
+  // Getters
+  public String getPid() {
+    return pid;
+  }
+
+  public int getArrivalTime() {
+    return arrivalTime;
+  }
+
+  public List<Burst> getBursts() {
+    return new ArrayList<>(bursts);
+  }
+
+  public int getPriority() {
+    return priority;
+  }
+
+  public int getRequiredPages() {
+    return requiredPages;
+  }
+
+  public ProcessState getState() {
+    return state;
+  }
+
+  public void setState(ProcessState state) {
+    this.state = state;
+  }
+  
+  public Set<Integer> getPageIds() {
+    return new HashSet<>(pageIds);
+  }
+  
+  public Set<Integer> getLoadedPages() {
+    return new HashSet<>(loadedPages);
+  }
+  
+  public void addLoadedPage(int pageId) {
+    loadedPages.add(pageId);
+  }
+  
+  public void removeLoadedPage(int pageId) {
+    loadedPages.remove(pageId);
+  }
+  
+  public void clearLoadedPages() {
+    loadedPages.clear();
+  }
+  
+  public boolean isPageLoaded(int pageId) {
+    return loadedPages.contains(pageId);
+  }
+  
+  public boolean allPagesLoaded() {
+    return loadedPages.containsAll(pageIds);
+  }
+  
+  // Métricas
+  
+  public int getCompletionTime() {
+    return completionTime;
+  }
+  
+  public void setCompletionTime(int completionTime) {
+    this.completionTime = completionTime;
+  }
+  
+  public int getWaitingTime() {
+    return waitingTime;
+  }
+  
+  public void setWaitingTime(int waitingTime) {
+    this.waitingTime = waitingTime;
+  }
+  
+  public int getTurnaroundTime() {
+    return turnaroundTime;
+  }
+  
+  public void setTurnaroundTime(int turnaroundTime) {
+    this.turnaroundTime = turnaroundTime;
+  }
+  
+  public int getResponseTime() {
+    return responseTime;
+  }
+  
+  public void setResponseTime(int responseTime) {
+    this.responseTime = responseTime;
+  }
+  
+  public int getFirstExecutionTime() {
+    return firstExecutionTime;
+  }
+  
+  public void setFirstExecutionTime(int firstExecutionTime) {
+    this.firstExecutionTime = firstExecutionTime;
+  }
+
+  /**
+   * Obtiene el tiempo total de CPU que necesita el proceso
+   */
+  public int getTotalCPUTime() {
+    int total = 0;
+    for (Burst burst : bursts) {
+      if (burst.getType() == Burst.BurstType.CPU) {
+        total += burst.getDuration();
+      }
+    }
+    return total;
+  }
+
+  /**
+   * Obtiene el tiempo restante de CPU
+   */
+  public int getRemainingCPUTime() {
+    int remaining = 0;
+    for (int i = currentBurstIndex; i < bursts.size(); i++) {
+      Burst burst = bursts.get(i);
+      if (burst.getType() == Burst.BurstType.CPU) {
+        remaining += burst.getRemainingTime();
+      }
+    }
+    return remaining;
+  }
+
+  /**
+   * Obtiene la ráfaga actual de CPU (tiempo restante)
+   */
+  public int getCurrentCPUBurstTime() {
+    if (currentBurstIndex < bursts.size()) {
+      Burst current = bursts.get(currentBurstIndex);
+      if (current.getType() == Burst.BurstType.CPU) {
+        return current.getRemainingTime();
+      }
+    }
+    return 0;
+  }
+
+  /**
+   * Obtiene la ráfaga actual
+   */
+  public Burst getCurrentBurst() {
+    if (currentBurstIndex < bursts.size()) {
+      return bursts.get(currentBurstIndex);
+    }
+    return null;
+  }
+
+  /**
+   * Ejecuta la ráfaga actual por un tiempo especificado
+   * @param time Tiempo a ejecutar
+   * @return Tiempo realmente ejecutado
+   */
+  public int executeBurst(int time) {
+    if (currentBurstIndex >= bursts.size()) {
+      return 0;
+    }
+    
+    Burst current = bursts.get(currentBurstIndex);
+    int executed = Math.min(time, current.getRemainingTime());
+    current.setRemainingTime(current.getRemainingTime() - executed);
+    
+    // Si la ráfaga se completó, avanzar al siguiente
+    if (current.getRemainingTime() <= 0) {
+      currentBurstIndex++;
+    }
+    
+    return executed;
+  }
+
+  /**
+   * Completa la ráfaga actual y pasa a la siguiente
+   */
+  public void completeCurrentBurst() {
+    if (currentBurstIndex < bursts.size()) {
+      bursts.get(currentBurstIndex).setRemainingTime(0);
+      currentBurstIndex++;
+    }
+  }
+  
+  /**
+   * Reinicia el índice de burst actual (para simulaciones)
+   */
+  public void resetBursts() {
+    currentBurstIndex = 0;
+    for (Burst burst : bursts) {
+      burst.setRemainingTime(burst.getDuration());
+    }
+  }
+
+  /**
+   * Verifica si el proceso ha completado todas sus ráfagas
+   */
+  public boolean isCompleted() {
+    return currentBurstIndex >= bursts.size();
+  }
+
+  /**
+   * Verifica si la siguiente ráfaga es de E/S
+   */
+  public boolean isNextBurstIO() {
+    if (currentBurstIndex < bursts.size()) {
+      Burst next = bursts.get(currentBurstIndex);
+      return next.getType() == Burst.BurstType.IO;
+    }
+    return false;
+  }
+
+  /**
+   * Obtiene el tiempo de la próxima ráfaga de E/S
+   */
+  public int getNextIOBurstTime() {
+    if (currentBurstIndex < bursts.size()) {
+      Burst next = bursts.get(currentBurstIndex);
+      if (next.getType() == Burst.BurstType.IO) {
+        return next.getDuration();
+      }
+    }
+    return 0;
+  }
+
+  @Override
+  public String toString() {
+    return String.format("Process[%s, Arrival: %d, State: %s, Bursts: %d]",
+        pid, arrivalTime, state, bursts.size());
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null || getClass() != obj.getClass())
+      return false;
+    Process process = (Process) obj;
+    return pid.equals(process.pid);
+  }
+
+  @Override
+  public int hashCode() {
+    return pid.hashCode();
+  }
+}

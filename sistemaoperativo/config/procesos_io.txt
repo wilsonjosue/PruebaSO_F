@@ -1,0 +1,17 @@
+# Configuración de ejemplo con operaciones de E/S intensivas
+# Este archivo demuestra procesos con múltiples ráfagas de CPU y E/S
+
+# Proceso con balance entre CPU y E/S
+P1 0 CPU(5),E/S(4),CPU(3),E/S(2),CPU(4) 1 4
+
+# Proceso intensivo en E/S
+P2 1 CPU(2),E/S(6),CPU(2),E/S(5),CPU(2) 2 5
+
+# Proceso mayormente CPU con algo de E/S
+P3 2 CPU(8),E/S(3),CPU(7) 1 6
+
+# Proceso con muchas operaciones cortas
+P4 3 CPU(3),E/S(1),CPU(2),E/S(1),CPU(3),E/S(1),CPU(2) 3 3
+
+# Proceso ligero con E/S al inicio
+P5 4 E/S(2),CPU(5),E/S(2),CPU(3) 2 4

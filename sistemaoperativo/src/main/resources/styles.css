@@ -1,0 +1,90 @@
+/* Estilos para el Simulador de Sistema Operativo */
+
+.root {
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
+    -fx-font-size: 12px;
+}
+
+/* Botones principales */
+.button {
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-opacity: 0.8;
+}
+
+/* Áreas de texto */
+.text-area {
+    -fx-background-color: white;
+    -fx-border-color: #cccccc;
+    -fx-border-width: 1;
+}
+
+.text-area .content {
+    -fx-background-color: white;
+}
+
+/* ComboBox */
+.combo-box {
+    -fx-background-radius: 5;
+}
+
+/* Spinner */
+.spinner {
+    -fx-background-radius: 5;
+}
+
+/* TabPane */
+.tab-pane {
+    -fx-background-color: white;
+}
+
+.tab {
+    -fx-background-color: #f0f0f0;
+    -fx-background-radius: 5 5 0 0;
+}
+
+.tab:selected {
+    -fx-background-color: white;
+    -fx-border-color: #007acc;
+    -fx-border-width: 2 2 0 2;
+}
+
+.tab-label {
+    -fx-font-weight: bold;
+}
+
+/* Títulos de secciones */
+.section-title {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+}
+
+/* Marcos de memoria */
+.memory-frame {
+    -fx-border-color: black;
+    -fx-border-width: 1;
+    -fx-background-radius: 3;
+    -fx-alignment: center;
+}
+
+.memory-frame-free {
+    -fx-background-color: lightgray;
+}
+
+.memory-frame-occupied {
+    -fx-background-color: lightblue;
+}
+
+/* ScrollPane */
+.scroll-pane {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: white;
+}

@@ -1,0 +1,9 @@
+# CASO CRÍTICO: THRASHING DE MEMORIA
+# Muchos procesos con muchas páginas
+# Configurar solo 8-10 marcos para ver muchos fallos y reemplazos
+# Comparar FIFO vs LRU vs Optimal
+
+P1 0 CPU(8) 1 10
+P2 0 CPU(8) 1 10
+P3 0 CPU(8) 1 10
+P4 0 CPU(8) 1 10
