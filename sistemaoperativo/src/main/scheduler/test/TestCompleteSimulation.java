@@ -28,10 +28,10 @@ public class TestCompleteSimulation {
   }
   
   /**
-   * Test básico de simulación con Round Robin
+   * Test basico de simulación con Round Robin
    */
   public static void testBasicSimulation() {
-    System.out.println("\n--- TEST 1: Simulación Básica con Round Robin ---");
+    System.out.println("\n--- TEST 1: Simulación Basica con Round Robin ---");
     
     List<Process> processes = new ArrayList<>();
     processes.add(createSimpleProcess("P1", 0, 10, 3));
@@ -48,7 +48,7 @@ public class TestCompleteSimulation {
     controller.addProcesses(processes);
     controller.runSimulation();
     
-    System.out.println("\nTest básico completado");
+    System.out.println("\nTest basico completado");
   }
   
   /**
@@ -58,7 +58,7 @@ public class TestCompleteSimulation {
     System.out.println("\n--- TEST 2: Gestión de Memoria ---");
     
     List<Process> processes = new ArrayList<>();
-    // Crear procesos que requieren más páginas que marcos disponibles
+    // Crear procesos que requieren mas paginas que marcos disponibles
     processes.add(createSimpleProcess("P1", 0, 5, 4));
     processes.add(createSimpleProcess("P2", 1, 6, 5));
     processes.add(createSimpleProcess("P3", 2, 4, 3));
@@ -74,10 +74,10 @@ public class TestCompleteSimulation {
     controller.addProcesses(processes);
     controller.runSimulation();
     
-    // Verificar que hubo fallos de página
+    // Verificar que hubo fallos de pagina
     int pageFaults = memory.getPageFaults();
-    System.out.println("\nFallos de página: " + pageFaults);
-    assert pageFaults > 0 : "Debería haber fallos de página";
+    System.out.println("\nFallos de pagina: " + pageFaults);
+    assert pageFaults > 0 : "Debería haber fallos de pagina";
     
     System.out.println("\nTest de memoria completado");
   }
@@ -182,10 +182,10 @@ public class TestCompleteSimulation {
   }
   
   /**
-   * Test con diferentes algoritmos de reemplazo de páginas
+   * Test con diferentes algoritmos de reemplazo de paginas
    */
   public static void testPageReplacementAlgorithms() {
-    System.out.println("\n--- TEST 5: Algoritmos de Reemplazo de Páginas ---");
+    System.out.println("\n--- TEST 5: Algoritmos de Reemplazo de Paginas ---");
     
     List<Process> baseProcesses = new ArrayList<>();
     baseProcesses.add(createSimpleProcess("P1", 0, 5, 5));
@@ -221,11 +221,11 @@ public class TestCompleteSimulation {
       controller.addProcesses(processes);
       controller.runSimulation();
       
-      System.out.println(String.format("Fallos de página: %d", memory.getPageFaults()));
+      System.out.println(String.format("Fallos de pagina: %d", memory.getPageFaults()));
       System.out.println(String.format("Reemplazos: %d", memory.getPageReplacements()));
     }
     
-    System.out.println("\nTest de reemplazo de páginas completado");
+    System.out.println("\nTest de reemplazo de paginas completado");
   }
   
   /**
@@ -242,7 +242,7 @@ public class TestCompleteSimulation {
       System.out.println(String.format("Procesos parseados: %d", processes.size()));
       
       for (Process p : processes) {
-        System.out.println(String.format("  %s: Llegada=%d, Ráfagas=%d, Páginas=%d",
+        System.out.println(String.format("  %s: Llegada=%d, Rafagas=%d, Paginas=%d",
             p.getPid(), p.getArrivalTime(), p.getBursts().size(), p.getRequiredPages()));
       }
       

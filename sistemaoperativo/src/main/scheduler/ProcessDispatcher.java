@@ -5,8 +5,8 @@ import model.Burst;
 import java.util.*;
 
 /**
- * Dispatcher principal que coordina la ejecución de procesos
- * Maneja la simulación completa con reloj sincronizado
+ * Dispatcher principal que coordina la ejecucion de procesos
+ * Maneja la simulacion completa con reloj sincronizado
  */
 public class ProcessDispatcher {
   private final SchedulingAlgorithm scheduler;
@@ -20,7 +20,7 @@ public class ProcessDispatcher {
   }
 
   /**
-   * Registra un proceso para la simulación
+   * Registra un proceso para la simulacion
    */
   public void registerProcess(Process process) {
     allProcesses.add(process);
@@ -28,10 +28,10 @@ public class ProcessDispatcher {
   }
 
   /**
-   * Ejecuta la simulación :)
+   * Ejecuta la simulacion :)
    */
   public void runSimulation() {
-    System.out.println("\n                             INICIANDO SIMULACIÓN ");
+    System.out.println("\n                             INICIANDO SIMULACIoN ");
     System.out.println("Algoritmo: " + scheduler.getClass().getSimpleName());
     System.out.println("Procesos registrados: " + allProcesses.size());
     
@@ -54,7 +54,7 @@ public class ProcessDispatcher {
         currentProcess = scheduler.getNextProcess();
         
         if (currentProcess != null) {
-          // Marcar primera ejecución
+          // Marcar primera ejecucion
           if (!firstExecution.containsKey(currentProcess.getPid())) {
             scheduler.onProcessStarted(currentProcess);
             firstExecution.put(currentProcess.getPid(), true);
@@ -82,7 +82,7 @@ public class ProcessDispatcher {
       if (currentProcess != null) {
         Burst activeBurst = currentProcess.getCurrentBurst();
         if (activeBurst == null) {
-          // Proceso terminó entre iteraciones
+          // Proceso termino entre iteraciones
           currentProcess.setState(Process.ProcessState.TERMINATED);
           currentProcess.setCompletionTime(currentTime);
           scheduler.onProcessCompletion(currentProcess);
@@ -138,7 +138,7 @@ public class ProcessDispatcher {
     }
     
     ganttChart.finalizeChart(currentTime);
-    System.out.println("\nSIMULACIÓN TERMINADA");
+    System.out.println("\nSIMULACIoN TERMINADA");
     System.out.println("Tiempo total: " + currentTime + " unidades");
   }
 
@@ -180,7 +180,7 @@ public class ProcessDispatcher {
   }
 
   /**
-   * Obtiene métricas de la simulación
+   * Obtiene métricas de la simulacion
    */
   public String getMetrics() {
     return scheduler.getMetrics() + "\n" + ganttChart.toString();
@@ -201,7 +201,7 @@ public class ProcessDispatcher {
   }
 
   /**
-   * Maneja una ráfaga de I/O completándola de forma inmediata para el modo consola
+   * Maneja una rafaga de I/O completandola de forma inmediata para el modo consola
    */
   private void handleImmediateIO(Process process, Burst ioBurst, int currentTime) {
     process.setState(Process.ProcessState.BLOCKED_IO);

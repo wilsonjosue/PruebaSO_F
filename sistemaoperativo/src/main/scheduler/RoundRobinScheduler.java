@@ -64,7 +64,7 @@ public class RoundRobinScheduler implements SchedulingAlgorithm {
 
   @Override
   public void onProcessInterrupted(Process process) {
-    // En RR, la interrupción es normal por agotamiento de quantum
+    // En RR, la interrupcion es normal por agotamiento de quantum
     if (process != null && process.getRemainingCPUTime() > 0) {
       queueLock.lock();
       try {

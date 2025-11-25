@@ -18,9 +18,9 @@ public class OSSimulator {
   
   public static void main(String[] args) {
     System.out.println("SIMULADOR EDUCATIVO DE SISTEMA OPERATIVO");
-    System.out.println("Gestión de Procesos y Memoria Virtual");
+    System.out.println("Gestion de Procesos y Memoria Virtual");
     
-    // Ejecutar simulación por defecto
+    // Ejecutar simulacion por defecto
     runDefaultSimulation();
     
     // Ejecutar simulaciones comparativas
@@ -28,10 +28,10 @@ public class OSSimulator {
   }
   
   /**
-   * Ejecuta una simulación con configuración por defecto
+   * Ejecuta una simulacion con configuracion por defecto
    */
   public static void runDefaultSimulation() {
-    System.out.println("\n=== SIMULACIÓN POR DEFECTO ===\n");
+    System.out.println("\n=== SIMULACIoN POR DEFECTO ===\n");
     
     // Crear procesos de ejemplo
     List<Process> processes = createExampleProcesses();
@@ -42,7 +42,7 @@ public class OSSimulator {
     MemoryManager memoryManager = new MemoryManager(10, pageAlgorithm);
     IOManager ioManager = new IOManager();
     
-    // Crear y ejecutar simulación
+    // Crear y ejecutar simulacion
     SimulationController controller = new SimulationController(
         scheduler, memoryManager, ioManager, 3, 100);
     
@@ -65,7 +65,7 @@ public class OSSimulator {
     for (String schedName : schedulerNames) {
       for (String memAlg : memoryAlgorithms) {
         System.out.println("\n" + "=".repeat(70));
-        System.out.println(String.format("Simulación: %s + %s", schedName, memAlg));
+        System.out.println(String.format("Simulacion: %s + %s", schedName, memAlg));
         System.out.println("=".repeat(70));
         
         // Crear copias de procesos (resetear estado)
@@ -81,7 +81,7 @@ public class OSSimulator {
         MemoryManager memoryManager = new MemoryManager(10, pageAlgorithm);
         IOManager ioManager = new IOManager();
         
-        // Ejecutar simulación
+        // Ejecutar simulacion
         SimulationController controller = new SimulationController(
             scheduler, memoryManager, ioManager, 3, 100);
         
@@ -99,7 +99,7 @@ public class OSSimulator {
   }
   
   /**
-   * Crea procesos de ejemplo para la simulación
+   * Crea procesos de ejemplo para la simulacion
    */
   private static List<Process> createExampleProcesses() {
     List<Process> processes = new ArrayList<>();
@@ -112,7 +112,7 @@ public class OSSimulator {
     );
     processes.add(new Process("P1", 0, bursts1, 1, 4));
     
-    // P2: Proceso con CPU, E/S y más CPU
+    // P2: Proceso con CPU, E/S y mas CPU
     List<Burst> bursts2 = Arrays.asList(
         new Burst(Burst.BurstType.CPU, 6),
         new Burst(Burst.BurstType.IO, 2),
@@ -183,7 +183,7 @@ public class OSSimulator {
   }
   
   /**
-   * Crea un algoritmo de reemplazo de páginas según el nombre
+   * Crea un algoritmo de reemplazo de paginas según el nombre
    */
   private static PageReplacementAlgorithm createPageAlgorithm(String name) {
     switch (name) {
@@ -199,11 +199,11 @@ public class OSSimulator {
   }
   
   /**
-   * Ejecuta una simulación desde archivo de configuración
+   * Ejecuta una simulacion desde archivo de configuracion
    */
   public static void runFromFile(String configFile) {
     try {
-      System.out.println(String.format("\n=== SIMULACIÓN DESDE ARCHIVO: %s ===\n", configFile));
+      System.out.println(String.format("\n=== SIMULACIoN DESDE ARCHIVO: %s ===\n", configFile));
       
       // Parsear procesos desde archivo
       List<Process> processes = ProcessConfigParser.parseFromFile(configFile);
@@ -219,7 +219,7 @@ public class OSSimulator {
       MemoryManager memoryManager = new MemoryManager(10, pageAlgorithm);
       IOManager ioManager = new IOManager();
       
-      // Crear y ejecutar simulación
+      // Crear y ejecutar simulacion
       SimulationController controller = new SimulationController(
           scheduler, memoryManager, ioManager, 3, 150);
       
@@ -232,7 +232,7 @@ public class OSSimulator {
   }
   
   /**
-   * Crea un archivo de ejemplo de configuración
+   * Crea un archivo de ejemplo de configuracion
    */
   public static void createExampleConfigFile(String filePath) {
     try {
@@ -251,7 +251,7 @@ public class OSSimulator {
     System.out.println("\nUSO DEL SIMULADOR:");
     System.out.println("  java main.OSSimulator [opciones]");
     System.out.println("\nOPCIONES:");
-    System.out.println("  --file <archivo>     Ejecutar simulación desde archivo");
+    System.out.println("  --file <archivo>     Ejecutar simulacion desde archivo");
     System.out.println("  --create <archivo>   Crear archivo de ejemplo");
     System.out.println("  --compare            Ejecutar simulaciones comparativas");
     System.out.println("  --help               Mostrar esta ayuda");

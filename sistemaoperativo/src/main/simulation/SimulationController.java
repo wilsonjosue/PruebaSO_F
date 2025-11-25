@@ -11,8 +11,8 @@ import sync.SynchronizationCoordinator;
 import java.util.*;
 
 /**
- * Controlador principal de la simulación del sistema operativo
- * Coordina todos los módulos y ejecuta la simulación paso a paso
+ * Controlador principal de la simulacion del sistema operativo
+ * Coordina todos los modulos y ejecuta la simulacion paso a paso
  */
 public class SimulationController {
   private List<Process> allProcesses;
@@ -43,33 +43,33 @@ public class SimulationController {
     this.running = false;
     
     System.out.println("\n=== SIMULADOR DE SISTEMA OPERATIVO ===");
-    System.out.println("Algoritmo de planificación: " + scheduler.getClass().getSimpleName());
+    System.out.println("Algoritmo de planificacion: " + scheduler.getClass().getSimpleName());
     System.out.println("Algoritmo de reemplazo: " + memoryManager.getReplacementAlgorithm().getName());
     System.out.println("Marcos de memoria: " + memoryManager.getTotalFrames());
     System.out.println("Quantum: " + (quantum > 0 ? quantum : "N/A"));
   }
   
   /**
-   * Agrega procesos a la simulación
+   * Agrega procesos a la simulacion
    */
   public void addProcesses(List<Process> processes) {
     allProcesses.addAll(processes);
     System.out.println(String.format("\nProcesos agregados: %d", processes.size()));
     for (Process p : processes) {
-      System.out.println(String.format("  %s: Llegada=%d, CPU=%d, Páginas=%d, Ráfagas=%d",
+      System.out.println(String.format("  %s: Llegada=%d, CPU=%d, Paginas=%d, Rafagas=%d",
           p.getPid(), p.getArrivalTime(), p.getTotalCPUTime(), 
           p.getRequiredPages(), p.getBursts().size()));
     }
   }
   
   /**
-   * Ejecuta la simulación completa
+   * Ejecuta la simulacion completa
    */
   public void runSimulation() {
     running = true;
     SimulationClock.reset();
     
-    System.out.println("\n=== INICIANDO SIMULACIÓN ===\n");
+    System.out.println("\n=== INICIANDO SIMULACIoN ===\n");
     
     Process currentProcess = null;
     int quantumRemaining = 0;
@@ -93,7 +93,7 @@ public class SimulationController {
         currentProcess = scheduler.getNextProcess();
         
         if (currentProcess != null) {
-          // Preparar proceso para ejecución
+          // Preparar proceso para ejecucion
           boolean ready = coordinator.prepareProcessForExecution(currentProcess);
           
           if (ready) {
@@ -117,7 +117,7 @@ public class SimulationController {
       if (currentProcess != null) {
         Burst currentBurst = currentProcess.getCurrentBurst();
         
-        // Verificar si la ráfaga actual es de E/S (puede ocurrir al inicio)
+        // Verificar si la rafaga actual es de E/S (puede ocurrir al inicio)
         if (currentBurst != null && currentBurst.getType() == Burst.BurstType.IO) {
           // Bloquear por E/S inmediatamente
           int ioDuration = currentBurst.getDuration();
@@ -139,12 +139,12 @@ public class SimulationController {
           memoryManager.notifyProcessCPUUsage(currentProcess, executed);
           ganttChart.addExecution(currentProcess.getPid(), currentTime, currentTime + executed);
           
-          System.out.println(String.format("[CPU] %s ejecutó %d unidad(es). Restante burst: %d",
+          System.out.println(String.format("[CPU] %s ejecuto %d unidad(es). Restante burst: %d",
               currentProcess.getPid(), executed, currentBurst.getRemainingTime()));
           
-          // Verificar si completó la ráfaga
+          // Verificar si completo la rafaga
           if (currentBurst.getRemainingTime() <= 0) {
-            // Verificar si hay más ráfagas
+            // Verificar si hay mas rafagas
             if (currentProcess.isCompleted()) {
               // Proceso terminado
               currentProcess.setCompletionTime(currentTime + executed);
@@ -154,7 +154,7 @@ public class SimulationController {
               currentProcess = null;
               quantumRemaining = 0;
             } else {
-              // Verificar si siguiente ráfaga es E/S
+              // Verificar si siguiente rafaga es E/S
               Burst nextBurst = currentProcess.getCurrentBurst();
               if (nextBurst != null && nextBurst.getType() == Burst.BurstType.IO) {
                 // Bloquear por E/S
@@ -196,7 +196,7 @@ public class SimulationController {
     }
     
     if (SimulationClock.getTime() >= maxSimulationTime) {
-      System.out.println("\n=== TIEMPO MÁXIMO DE SIMULACIÓN ALCANZADO ===");
+      System.out.println("\n=== TIEMPO MaXIMO DE SIMULACIoN ALCANZADO ===");
     }
     
     printFinalReport();
@@ -211,13 +211,13 @@ public class SimulationController {
         p.setState(Process.ProcessState.READY);
         scheduler.addProcess(p);
         ganttChart.addEvent(currentTime, p.getPid() + " LLEGA");
-        System.out.println(String.format("[LLEGADA] Proceso %s llegó al sistema", p.getPid()));
+        System.out.println(String.format("[LLEGADA] Proceso %s llego al sistema", p.getPid()));
       }
     }
   }
   
   /**
-   * Verifica si todos los procesos completaron su ejecución
+   * Verifica si todos los procesos completaron su ejecucion
    */
   private boolean allProcessesCompleted() {
     for (Process p : allProcesses) {
@@ -229,11 +229,11 @@ public class SimulationController {
   }
   
   /**
-   * Imprime el reporte final de la simulación
+   * Imprime el reporte final de la simulacion
    */
   private void printFinalReport() {
     System.out.println("\n" + "=".repeat(60));
-    System.out.println("           REPORTE FINAL DE SIMULACIÓN");
+    System.out.println("           REPORTE FINAL DE SIMULACIoN");
     System.out.println("=".repeat(60));
     
     // Diagrama de Gantt
@@ -254,18 +254,18 @@ public class SimulationController {
     // Resumen de procesos
     System.out.println("\n=== RESUMEN DE PROCESOS ===");
     for (Process p : allProcesses) {
-      System.out.println(String.format("%s: Estado=%s, Llegada=%d, Primera Ejecución=%d, Finalización=%d",
+      System.out.println(String.format("%s: Estado=%s, Llegada=%d, Primera Ejecucion=%d, Finalizacion=%d",
           p.getPid(), p.getState(), p.getArrivalTime(), 
           p.getFirstExecutionTime(), p.getCompletionTime()));
     }
     
     System.out.println("\n" + "=".repeat(60));
-    System.out.println("           FIN DE LA SIMULACIÓN");
+    System.out.println("           FIN DE LA SIMULACIoN");
     System.out.println("=".repeat(60));
   }
   
   /**
-   * Detiene la simulación
+   * Detiene la simulacion
    */
   public void stop() {
     running = false;

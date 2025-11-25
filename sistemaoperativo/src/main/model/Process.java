@@ -22,17 +22,17 @@ public class Process implements Runnable {
   private ProcessState state;
   
   // Memoria virtual
-  private Set<Integer> pageIds; // IDs de páginas que requiere este proceso
-  private Set<Integer> loadedPages; // Páginas actualmente en memoria
+  private Set<Integer> pageIds; // IDs de paginas que requiere este proceso
+  private Set<Integer> loadedPages; // Paginas actualmente en memoria
   
-  // Sincronización
+  // Sincronizacion
   private Lock lock;
   private Condition memoryAvailable;
   private Condition ioComplete;
   private volatile boolean memoryReady;
   private volatile boolean ioReady;
   
-  // Métricas de ejecución
+  // Métricas de ejecucion
   private int completionTime;
   private int waitingTime;
   private int turnaroundTime;
@@ -52,14 +52,14 @@ public class Process implements Runnable {
     this.requiredPages = requiredPages;
     this.state = ProcessState.NEW;
     
-    // Inicializar páginas (IDs consecutivos desde 0)
+    // Inicializar paginas (IDs consecutivos desde 0)
     this.pageIds = new HashSet<>();
     this.loadedPages = new HashSet<>();
     for (int i = 0; i < requiredPages; i++) {
       pageIds.add(i);
     }
     
-    // Inicializar sincronización
+    // Inicializar sincronizacion
     this.lock = new ReentrantLock();
     this.memoryAvailable = lock.newCondition();
     this.ioComplete = lock.newCondition();
@@ -76,12 +76,12 @@ public class Process implements Runnable {
 
   @Override
   public void run() {
-    // La ejecución real se controla desde el ProcessDispatcher
+    // La ejecucion real se controla desde el ProcessDispatcher
     // Este método se llama cuando el hilo es iniciado
     System.out.println("Hilo del proceso " + pid + " iniciado");
   }
   
-  // Métodos de sincronización
+  // Métodos de sincronizacion
   
   /**
    * Espera hasta que la memoria esté disponible para este proceso
@@ -98,7 +98,7 @@ public class Process implements Runnable {
   }
   
   /**
-   * Notifica que la memoria está lista para este proceso
+   * Notifica que la memoria esta lista para este proceso
    */
   public void signalMemoryReady() {
     lock.lock();
@@ -111,7 +111,7 @@ public class Process implements Runnable {
   }
   
   /**
-   * Espera hasta que la operación de E/S se complete
+   * Espera hasta que la operacion de E/S se complete
    */
   public void waitForIO() throws InterruptedException {
     lock.lock();
@@ -125,7 +125,7 @@ public class Process implements Runnable {
   }
   
   /**
-   * Notifica que la operación de E/S se completó
+   * Notifica que la operacion de E/S se completo
    */
   public void signalIOComplete() {
     lock.lock();
@@ -288,7 +288,7 @@ public class Process implements Runnable {
   }
 
   /**
-   * Obtiene la ráfaga actual de CPU (tiempo restante)
+   * Obtiene la rafaga actual de CPU (tiempo restante)
    */
   public int getCurrentCPUBurstTime() {
     if (currentBurstIndex < bursts.size()) {
@@ -301,7 +301,7 @@ public class Process implements Runnable {
   }
 
   /**
-   * Obtiene la ráfaga actual
+   * Obtiene la rafaga actual
    */
   public Burst getCurrentBurst() {
     if (currentBurstIndex < bursts.size()) {
@@ -311,7 +311,7 @@ public class Process implements Runnable {
   }
 
   /**
-   * Ejecuta la ráfaga actual por un tiempo especificado
+   * Ejecuta la rafaga actual por un tiempo especificado
    * @param time Tiempo a ejecutar
    * @return Tiempo realmente ejecutado
    */
@@ -324,7 +324,7 @@ public class Process implements Runnable {
     int executed = Math.min(time, current.getRemainingTime());
     current.setRemainingTime(current.getRemainingTime() - executed);
     
-    // Si la ráfaga se completó, avanzar al siguiente
+    // Si la rafaga se completo, avanzar al siguiente
     if (current.getRemainingTime() <= 0) {
       currentBurstIndex++;
     }
@@ -333,7 +333,7 @@ public class Process implements Runnable {
   }
 
   /**
-   * Completa la ráfaga actual y pasa a la siguiente
+   * Completa la rafaga actual y pasa a la siguiente
    */
   public void completeCurrentBurst() {
     if (currentBurstIndex < bursts.size()) {
@@ -353,14 +353,14 @@ public class Process implements Runnable {
   }
 
   /**
-   * Verifica si el proceso ha completado todas sus ráfagas
+   * Verifica si el proceso ha completado todas sus rafagas
    */
   public boolean isCompleted() {
     return currentBurstIndex >= bursts.size();
   }
 
   /**
-   * Verifica si la siguiente ráfaga es de E/S
+   * Verifica si la siguiente rafaga es de E/S
    */
   public boolean isNextBurstIO() {
     if (currentBurstIndex < bursts.size()) {
@@ -371,7 +371,7 @@ public class Process implements Runnable {
   }
 
   /**
-   * Obtiene el tiempo de la próxima ráfaga de E/S
+   * Obtiene el tiempo de la proxima rafaga de E/S
    */
   public int getNextIOBurstTime() {
     if (currentBurstIndex < bursts.size()) {

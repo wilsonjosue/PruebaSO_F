@@ -26,10 +26,10 @@ public class IOManager {
   }
   
   /**
-   * Inicia una operación de E/S para un proceso
+   * Inicia una operacion de E/S para un proceso
    * 
    * @param process Proceso que solicita E/S
-   * @param duration Duración de la operación
+   * @param duration Duracion de la operacion
    */
   public void startIOOperation(Process process, int duration) {
     ioLock.lock();
@@ -45,7 +45,7 @@ public class IOManager {
       process.setState(Process.ProcessState.BLOCKED_IO);
       process.resetIOReady();
       
-      System.out.println(String.format("[E/S] Proceso %s inicia operación de E/S (duración: %d, finaliza en t=%d)",
+      System.out.println(String.format("[E/S] Proceso %s inicia operacion de E/S (duracion: %d, finaliza en t=%d)",
           pid, duration, endTime));
       
     } finally {
@@ -70,7 +70,7 @@ public class IOManager {
         IOOperation operation = entry.getValue();
         
         if (currentTime >= operation.getEndTime()) {
-          // La operación de E/S ha terminado
+          // La operacion de E/S ha terminado
           String pid = entry.getKey();
           
           // Buscar el proceso correspondiente
@@ -80,7 +80,7 @@ public class IOManager {
             process.setState(Process.ProcessState.READY);
             completedProcesses.add(process);
             
-            System.out.println(String.format("[E/S] Proceso %s completó operación de E/S en t=%d",
+            System.out.println(String.format("[E/S] Proceso %s completo operacion de E/S en t=%d",
                 pid, currentTime));
           }
           
@@ -109,7 +109,7 @@ public class IOManager {
   }
   
   /**
-   * Verifica si un proceso tiene una operación de E/S activa
+   * Verifica si un proceso tiene una operacion de E/S activa
    */
   public boolean hasActiveIOOperation(String pid) {
     ioLock.lock();
@@ -201,7 +201,7 @@ public class IOManager {
   }
   
   /**
-   * Clase interna para representar una operación de E/S
+   * Clase interna para representar una operacion de E/S
    */
   private static class IOOperation {
     private String processId;

@@ -3,7 +3,7 @@ package main;
 import ui.SimulatorGUI;
 
 /**
- * Launcher para la interfaz gráfica del simulador
+ * Launcher para la interfaz grafica del simulador
  * Ejecuta la GUI con JavaFX
  */
 public class GUILauncher {

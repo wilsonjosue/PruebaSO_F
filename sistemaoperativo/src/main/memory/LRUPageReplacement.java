@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Algoritmo de reemplazo de páginas LRU (Least Recently Used)
- * Reemplaza la página que no ha sido usada por más tiempo
+ * Algoritmo de reemplazo de paginas LRU (Least Recently Used)
+ * Reemplaza la pagina que no ha sido usada por mas tiempo
  */
 public class LRUPageReplacement implements PageReplacementAlgorithm {
   private Map<Integer, Integer> lastAccessTime;
@@ -17,7 +17,7 @@ public class LRUPageReplacement implements PageReplacementAlgorithm {
   
   @Override
   public int selectVictimFrame(List<PageFrame> frames, int currentTime) {
-    // Seleccionar la página con el tiempo de acceso más antiguo
+    // Seleccionar la pagina con el tiempo de acceso mas antiguo
     int victimIndex = -1;
     int oldestAccessTime = Integer.MAX_VALUE;
     

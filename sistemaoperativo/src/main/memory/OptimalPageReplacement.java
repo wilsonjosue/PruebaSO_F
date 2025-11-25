@@ -7,9 +7,9 @@ import java.util.ArrayList;
 
 /**
  * Algoritmo de reemplazo OPTIMAL corregido.
- * - El puntero avanza SOLO cuando realmente se accede a una página.
+ * - El puntero avanza SOLO cuando realmente se accede a una pagina.
  * - Maneja correctamente accesos futuros por proceso.
- * - No se adelanta en función de ráfagas de CPU.
+ * - No se adelanta en funcion de rafagas de CPU.
  */
 public class OptimalPageReplacement implements PageReplacementAlgorithm {
 
@@ -30,7 +30,7 @@ public class OptimalPageReplacement implements PageReplacementAlgorithm {
   }
 
   /**
-   * Avanza UNA posición cuando se accede realmente a memoria.
+   * Avanza UNA posicion cuando se accede realmente a memoria.
    */
   public void advancePointerOnRealAccess(String processId) {
     int current = currentPositions.getOrDefault(processId, 0);
@@ -59,34 +59,34 @@ public class OptimalPageReplacement implements PageReplacementAlgorithm {
 
       PageFrame frame = frames.get(i);
 
-      // Si el marco está libre, usarlo
+      // Si el marco esta libre, usarlo
       if (!frame.isOccupied()) {
         return i;
       }
 
       int nextUse = findNextUse(frame.getProcessId(), frame.getPageId());
 
-      // Si NO SE USARÁ MÁS: ¡victima inmediata!
+      // Si NO SE USARa MaS: ¡victima inmediata!
       if (nextUse == -1) {
         return i;
       }
 
-      // Escoger página cuyo próximo uso está MÁS LEJOS
+      // Escoger pagina cuyo proximo uso esta MaS LEJOS
       if (nextUse > farthestUse) {
         farthestUse = nextUse;
         victimIndex = i;
       }
     }
 
-    // Si todo falló, algo anda raro, pero selecciona el primero
+    // Si todo fallo, algo anda raro, pero selecciona el primero
     return victimIndex != -1 ? victimIndex : 0;
   }
 
   /**
-   * Busca el próximo uso futuro real de la página.
+   * Busca el proximo uso futuro real de la pagina.
    * Retorna:
    * - índice en lista futura
-   * - -1 si nunca más se usa
+   * - -1 si nunca mas se usa
    */
   private int findNextUse(String processId, int pageId) {
 
@@ -103,7 +103,7 @@ public class OptimalPageReplacement implements PageReplacementAlgorithm {
       }
     }
 
-    return -1; // ya no se usará en el futuro
+    return -1; // ya no se usara en el futuro
   }
 
   @Override
@@ -114,7 +114,7 @@ public class OptimalPageReplacement implements PageReplacementAlgorithm {
 
   @Override
   public void notifyPageLoaded(int frameIndex, String processId, int pageId, int currentTime) {
-    // No se requiere acción
+    // No se requiere accion
   }
 
   @Override

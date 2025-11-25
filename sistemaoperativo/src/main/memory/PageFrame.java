@@ -1,7 +1,7 @@
 package memory;
 
 /**
- * Representa un marco de página en la memoria física
+ * Representa un marco de pagina en la memoria física
  */
 public class PageFrame {
   private int frameId;

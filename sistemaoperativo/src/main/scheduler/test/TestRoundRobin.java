@@ -57,7 +57,7 @@ public class TestRoundRobin {
     
     System.out.println("Quantum: 2");
     System.out.println("Secuencia esperada: P1→P2→P3→P1→P2→P1");
-    System.out.println("Tiempo de respuesta promedio esperado: bajo (todos responden rápido)");
+    System.out.println("Tiempo de respuesta promedio esperado: bajo (todos responden rapido)");
     
     double avgWait = metrics.getAverageWaitingTime();
     double avgTurnaround = metrics.getAverageTurnaroundTime();

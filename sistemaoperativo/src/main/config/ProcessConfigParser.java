@@ -6,7 +6,7 @@ import java.io.*;
 import java.util.*;
 
 /**
- * Parser para leer configuración de procesos desde archivo
+ * Parser para leer configuracion de procesos desde archivo
  * Formato: PID ArrivalTime Bursts Priority Pages
  * Ejemplo: P1 0 CPU(4),E/S(3),CPU(5) 1 4
  */
@@ -50,7 +50,7 @@ public class ProcessConfigParser {
   }
   
   /**
-   * Parsea una línea de configuración
+   * Parsea una línea de configuracion
    * 
    * @param line Línea a parsear
    * @return Proceso creado
@@ -59,7 +59,7 @@ public class ProcessConfigParser {
     String[] parts = line.split("\\s+");
     
     if (parts.length < 5) {
-      throw new IllegalArgumentException("Formato inválido. Esperado: PID ArrivalTime Bursts Priority Pages");
+      throw new IllegalArgumentException("Formato invalido. Esperado: PID ArrivalTime Bursts Priority Pages");
     }
     
     String pid = parts[0];
@@ -72,11 +72,11 @@ public class ProcessConfigParser {
   }
   
   /**
-   * Parsea la especificación de ráfagas
+   * Parsea la especificacion de rafagas
    * Formato: CPU(4),E/S(3),CPU(5) o CPU(4),IO(3),CPU(5)
    * 
-   * @param burstSpec Especificación de ráfagas
-   * @return Lista de ráfagas
+   * @param burstSpec Especificacion de rafagas
+   * @return Lista de rafagas
    */
   private static List<Burst> parseBursts(String burstSpec) {
     List<Burst> bursts = new ArrayList<>();
@@ -90,7 +90,7 @@ public class ProcessConfigParser {
       int closeParen = burstStr.indexOf(')');
       
       if (openParen == -1 || closeParen == -1) {
-        throw new IllegalArgumentException("Formato de ráfaga inválido: " + burstStr);
+        throw new IllegalArgumentException("Formato de rafaga invalido: " + burstStr);
       }
       
       String type = burstStr.substring(0, openParen).trim().toUpperCase();
@@ -102,7 +102,7 @@ public class ProcessConfigParser {
       } else if (type.equals("E/S") || type.equals("IO") || type.equals("I/O")) {
         burstType = Burst.BurstType.IO;
       } else {
-        throw new IllegalArgumentException("Tipo de ráfaga desconocido: " + type);
+        throw new IllegalArgumentException("Tipo de rafaga desconocido: " + type);
       }
       
       bursts.add(new Burst(burstType, duration));
@@ -112,7 +112,7 @@ public class ProcessConfigParser {
   }
   
   /**
-   * Crea procesos desde una configuración en memoria
+   * Crea procesos desde una configuracion en memoria
    * 
    * @param configs Lista de configuraciones de procesos
    * @return Lista de procesos
@@ -143,7 +143,7 @@ public class ProcessConfigParser {
    */
   public static void saveToFile(List<Process> processes, String filePath) throws IOException {
     try (PrintWriter writer = new PrintWriter(new FileWriter(filePath))) {
-      writer.println("# Configuración de procesos");
+      writer.println("# Configuracion de procesos");
       writer.println("# Formato: PID ArrivalTime Bursts Priority Pages");
       writer.println("# Ejemplo: P1 0 CPU(4),E/S(3),CPU(5) 1 4");
       writer.println();
@@ -163,7 +163,7 @@ public class ProcessConfigParser {
   }
   
   /**
-   * Formatea ráfagas para guardar
+   * Formatea rafagas para guardar
    */
   private static String formatBursts(List<Burst> bursts) {
     StringBuilder sb = new StringBuilder();
@@ -179,7 +179,7 @@ public class ProcessConfigParser {
   }
   
   /**
-   * Clase auxiliar para configuración de procesos
+   * Clase auxiliar para configuracion de procesos
    */
   public static class ProcessConfig {
     public String pid;

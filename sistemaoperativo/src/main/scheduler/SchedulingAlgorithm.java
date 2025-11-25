@@ -4,13 +4,13 @@ import model.Process;
 import java.util.List;
 
 /**
- * Interface común para todos los algoritmos de planificación.
+ * Interface común para todos los algoritmos de planificacion.
  * Define los métodos que deben implementar todos los schedulers.
  */
 public interface SchedulingAlgorithm {
 
   /**
-   * Obtiene el próximo proceso a ejecutar según el algoritmo
+   * Obtiene el proximo proceso a ejecutar según el algoritmo
    * 
    * @return Proceso a ejecutar, o null si no hay procesos listos
    */
@@ -24,9 +24,9 @@ public interface SchedulingAlgorithm {
   void addProcess(Process process);
 
   /**
-   * Se llama cuando un proceso completa su ráfaga de CPU actual
+   * Se llama cuando un proceso completa su rafaga de CPU actual
    * 
-   * @param process Proceso que completó su ejecución
+   * @param process Proceso que completo su ejecucion
    */
   void onProcessCompletion(Process process);
 
@@ -39,7 +39,7 @@ public interface SchedulingAlgorithm {
   void onProcessInterrupted(Process process);
   
   /**
-   * Se llama cuando un proceso comienza su primera ejecución
+   * Se llama cuando un proceso comienza su primera ejecucion
    * 
    * @param process Proceso que inicia
    */
@@ -48,13 +48,13 @@ public interface SchedulingAlgorithm {
   /**
    * Registra tiempo de CPU ejecutado
    * 
-   * @param process Proceso que ejecutó
+   * @param process Proceso que ejecuto
    * @param time Tiempo ejecutado
    */
   void recordCPUExecution(Process process, int time);
 
   /**
-   * Obtiene la cola actual de procesos listos para visualización
+   * Obtiene la cola actual de procesos listos para visualizacion
    * 
    * @return Lista de procesos en cola de listos
    */

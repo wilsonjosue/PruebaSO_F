@@ -1,7 +1,7 @@
 package scheduler;
 
 /**
- * Reloj global sincronizado para la simulación
+ * Reloj global sincronizado para la simulacion
  * Mantiene consistencia en el tiempo entre todos los componentes
  */
 public class SimulationClock {

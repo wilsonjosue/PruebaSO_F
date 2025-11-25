@@ -1,7 +1,7 @@
 package model;
 
 /**
- * Representa una ráfaga de CPU o E/S en un proceso
+ * Representa una rafaga de CPU o E/S en un proceso
  */
 public class Burst {
   private BurstType type;
@@ -36,7 +36,7 @@ public class Burst {
   }
 
   /**
-   * Verifica si la ráfaga ha sido completada
+   * Verifica si la rafaga ha sido completada
    */
   public boolean isCompleted() {
     return remainingTime <= 0;

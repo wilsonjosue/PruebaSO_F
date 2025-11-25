@@ -5,7 +5,7 @@ import java.util.*;
 import java.util.concurrent.locks.*;
 
 /**
- * Cola de procesos lista con sincronización para acceso concurrente
+ * Cola de procesos lista con sincronizacion para acceso concurrente
  * Evita condiciones de carrera cuando varios hilos acceden
  */
 public class ReadyQueue {
@@ -36,7 +36,7 @@ public class ReadyQueue {
 
   /**
    * Obtiene y remueve el primer proceso de la cola
-   * Si la cola está vacía, bloquea hasta que haya procesos
+   * Si la cola esta vacía, bloquea hasta que haya procesos
    */
   public Process getNextProcess() throws InterruptedException {
     lock.lock();

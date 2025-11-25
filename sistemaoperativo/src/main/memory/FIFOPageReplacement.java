@@ -5,8 +5,8 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 /**
- * Algoritmo de reemplazo de páginas FIFO (First In, First Out)
- * Reemplaza la página que ha estado más tiempo en memoria
+ * Algoritmo de reemplazo de paginas FIFO (First In, First Out)
+ * Reemplaza la pagina que ha estado mas tiempo en memoria
  */
 public class FIFOPageReplacement implements PageReplacementAlgorithm {
   private Queue<Integer> loadOrder;
@@ -17,7 +17,7 @@ public class FIFOPageReplacement implements PageReplacementAlgorithm {
   
   @Override
   public int selectVictimFrame(List<PageFrame> frames, int currentTime) {
-    // Seleccionar la página que llegó primero (más antigua)
+    // Seleccionar la pagina que llego primero (mas antigua)
     if (loadOrder.isEmpty()) {
       // Si no hay registro, buscar el marco con menor loadTime
       int oldestFrameIndex = -1;
@@ -33,7 +33,7 @@ public class FIFOPageReplacement implements PageReplacementAlgorithm {
       return oldestFrameIndex;
     }
     
-    // Obtener el marco más antiguo de la cola
+    // Obtener el marco mas antiguo de la cola
     int oldestFrameIndex = loadOrder.poll();
     return oldestFrameIndex;
   }

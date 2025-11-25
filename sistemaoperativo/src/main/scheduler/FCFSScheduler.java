@@ -56,7 +56,7 @@ public class FCFSScheduler implements SchedulingAlgorithm {
 
   @Override
   public void onProcessInterrupted(Process process) {
-    // FCFS no es apropiativo, si ocurre una interrupción (ej: I/O)
+    // FCFS no es apropiativo, si ocurre una interrupcion (ej: I/O)
     // el proceso debe ir al FINAL de la cola para respetar el orden FIFO
     if (process != null && process.getRemainingCPUTime() > 0) {
       queueLock.lock();

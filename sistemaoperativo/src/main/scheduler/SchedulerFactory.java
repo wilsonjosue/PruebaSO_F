@@ -1,8 +1,8 @@
 package scheduler;
 
 /**
- * Factory para crear instancias de algoritmos de planificación
- * Centraliza la creación y permite cambiar fácilmente entre algoritmos
+ * Factory para crear instancias de algoritmos de planificacion
+ * Centraliza la creacion y permite cambiar facilmente entre algoritmos
  */
 public class SchedulerFactory {
 

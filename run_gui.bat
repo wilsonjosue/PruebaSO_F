@@ -4,7 +4,7 @@ REM Asegúrate de configurar la ruta de JavaFX SDK
 
 REM ===== CONFIGURACIÓN =====
 REM Edita esta línea con la ruta a tu JavaFX SDK
-SET JAVAFX_PATH=C:\Users\Jhossep\Downloads\openjfx-17.0.17_windows-x64_bin-sdk\javafx-sdk-17.0.17\lib
+SET JAVAFX_PATH=C:\Program Files\Java\javafx-sdk-17.0.17\lib
 
 REM Verifica que la ruta existe
 IF NOT EXIST "%JAVAFX_PATH%" (

@@ -7,7 +7,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Shortest Job First (SJF) - No apropiativo por defecto
- * Ejecuta primero el proceso con la ráfaga de CPU más corta.
+ * Ejecuta primero el proceso con la rafaga de CPU mas corta.
  */
 public class SJFScheduler implements SchedulingAlgorithm {
   private final PriorityQueue<Process> readyQueue;
@@ -15,7 +15,7 @@ public class SJFScheduler implements SchedulingAlgorithm {
   private final Lock queueLock;
 
   public SJFScheduler() {
-    // Cola de prioridad ordenada por la próxima ráfaga de CPU disponible
+    // Cola de prioridad ordenada por la proxima rafaga de CPU disponible
     this.readyQueue = new PriorityQueue<>(
         Comparator.comparingInt(SJFScheduler::getNextCPUBurstTime)
             .thenComparingInt(Process::getArrivalTime));
@@ -39,7 +39,7 @@ public class SJFScheduler implements SchedulingAlgorithm {
     try {
         readyQueue.offer(process);
         System.out.println("SJF: Proceso " + process.getPid() +
-          " agregado. Próxima ráfaga: " + getNextCPUBurstTime(process) +
+          " agregado. Proxima rafaga: " + getNextCPUBurstTime(process) +
           ". Tamaño cola: " + readyQueue.size());
     } finally {
       queueLock.unlock();
@@ -111,7 +111,7 @@ public class SJFScheduler implements SchedulingAlgorithm {
     if (nextBurst > 0) {
       return nextBurst;
     }
-    // Fallback para procesos que no tienen ráfaga de CPU inmediata
+    // Fallback para procesos que no tienen rafaga de CPU inmediata
     return Math.max(1, process.getRemainingCPUTime());
   }
 }

@@ -28,7 +28,7 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * Interfaz gráfica principal del simulador de Sistema Operativo
+ * Interfaz grafica principal del simulador de Sistema Operativo
  * Muestra en tiempo real el estado de CPU, memoria, E/S y métricas
  */
 public class SimulatorGUI extends Application {
@@ -44,14 +44,14 @@ public class SimulatorGUI extends Application {
     private int totalCPUTime = 0;
     private int idleTime = 0;
     
-    // Controles de configuración
+    // Controles de configuracion
     private ComboBox<String> schedulerCombo;
     private ComboBox<String> memoryAlgorithmCombo;
     private Spinner<Integer> quantumSpinner;
     private Spinner<Integer> memoryFramesSpinner;
     private Spinner<Integer> simulationSpeedSpinner;
     
-    // Áreas de visualización
+    // Areas de visualizacion
     private TextArea processListArea;
     private TextArea cpuStateArea;
     private TextArea memoryStateArea;
@@ -60,7 +60,7 @@ public class SimulatorGUI extends Application {
     private TextArea metricsArea;
     private TextArea logArea;
     
-    // Visualización gráfica de memoria
+    // Visualización grafica de memoria
     private GridPane memoryGrid;
     private Label[] memoryFrameLabels;
     
@@ -89,13 +89,13 @@ public class SimulatorGUI extends Application {
         BorderPane root = new BorderPane();
         root.setPadding(new Insets(10));
         
-        // Panel superior: controles de configuración
+        // Panel superior: controles de configuracion
         root.setTop(createConfigPanel());
         
-        // Panel central: visualización principal
+        // Panel central: visualizacion principal
         root.setCenter(createMainPanel());
         
-        // Panel inferior: controles de simulación
+        // Panel inferior: controles de simulacion
         root.setBottom(createControlPanel());
         
         Scene scene = new Scene(root, 1400, 900);
@@ -110,18 +110,18 @@ public class SimulatorGUI extends Application {
         primaryStage.show();
         
         // Log inicial
-        appendLog("Sistema iniciado. Configure los parámetros y cargue procesos.");
+        appendLog("Sistema iniciado. Configure los parametros y cargue procesos.");
     }
     
     /**
-     * Crea el panel de configuración superior
+     * Crea el panel de configuracion superior
      */
     private VBox createConfigPanel() {
         VBox configBox = new VBox(10);
         configBox.setPadding(new Insets(10));
         configBox.setStyle("-fx-background-color: #f0f0f0; -fx-border-color: #cccccc; -fx-border-width: 1;");
         
-        Label titleLabel = new Label("⚙️ CONFIGURACIÓN DEL SIMULADOR");
+        Label titleLabel = new Label("CONFIGURACIÓN DEL SIMULADOR");
         titleLabel.setFont(Font.font("Arial", FontWeight.BOLD, 16));
         
         // Primera fila: Algoritmos
@@ -134,7 +134,7 @@ public class SimulatorGUI extends Application {
         schedulerCombo.setValue("Round Robin");
         schedulerCombo.setPrefWidth(150);
         
-        Label memLabel = new Label("Reemplazo de Páginas:");
+        Label memLabel = new Label("Reemplazo de Paginas:");
         memoryAlgorithmCombo = new ComboBox<>();
         memoryAlgorithmCombo.getItems().addAll("FIFO", "LRU", "Optimal");
         memoryAlgorithmCombo.setValue("LRU");
@@ -142,7 +142,7 @@ public class SimulatorGUI extends Application {
         
         row1.getChildren().addAll(schedLabel, schedulerCombo, memLabel, memoryAlgorithmCombo);
         
-        // Segunda fila: Parámetros numéricos
+        // Segunda fila: Parametros numericos
         HBox row2 = new HBox(15);
         row2.setAlignment(Pos.CENTER_LEFT);
         
@@ -181,27 +181,27 @@ public class SimulatorGUI extends Application {
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
         
         // Tab 1: Vista general
-        Tab overviewTab = new Tab("📊 Vista General");
+        Tab overviewTab = new Tab("Vista General");
         overviewTab.setContent(createOverviewPanel());
         
         // Tab 2: Procesos
-        Tab processesTab = new Tab("📋 Procesos");
+        Tab processesTab = new Tab("Procesos");
         processesTab.setContent(createProcessesPanel());
         
         // Tab 3: Memoria
-        Tab memoryTab = new Tab("💾 Memoria");
+        Tab memoryTab = new Tab("Memoria");
         memoryTab.setContent(createMemoryPanel());
         
         // Tab 4: Diagrama de Gantt
-        Tab ganttTab = new Tab("📈 Diagrama de Gantt");
+        Tab ganttTab = new Tab("Diagrama de Gantt");
         ganttTab.setContent(createGanttPanel());
         
-        // Tab 5: Métricas
-        Tab metricsTab = new Tab("📉 Métricas de Desempeño");
+        //Tab 5:Metricas
+        Tab metricsTab = new Tab("Metricas de Desempenio");
         metricsTab.setContent(createMetricsPanel());
         
         // Tab 6: Log de eventos
-        Tab logTab = new Tab("📝 Log de Eventos");
+        Tab logTab = new Tab("Log de Eventos");
         logTab.setContent(createLogPanel());
         
         tabPane.getTabs().addAll(overviewTab, processesTab, memoryTab, ganttTab, metricsTab, logTab);
@@ -223,7 +223,7 @@ public class SimulatorGUI extends Application {
         timeLabel = new Label("Tiempo: 0");
         timeLabel.setFont(Font.font("Monospaced", FontWeight.BOLD, 14));
         cpuUtilLabel = new Label("Utilización CPU: 0%");
-        pageFaultsLabel = new Label("Fallos de Página: 0");
+        pageFaultsLabel = new Label("Fallos de Pagina: 0");
         
         statusBox.getChildren().addAll(timeLabel, cpuUtilLabel, pageFaultsLabel);
         grid.add(statusBox, 0, 0);
@@ -297,19 +297,19 @@ public class SimulatorGUI extends Application {
         buttonBox.setPadding(new Insets(10));
         buttonBox.setAlignment(Pos.TOP_CENTER);
         
-        loadFileButton = new Button("📁 Cargar desde Archivo");
+        loadFileButton = new Button("Cargar desde Archivo");
         loadFileButton.setMaxWidth(Double.MAX_VALUE);
         loadFileButton.setOnAction(e -> loadProcessesFromFile());
         
-        addProcessButton = new Button("➕ Agregar Proceso Manual");
+        addProcessButton = new Button("Agregar Proceso Manual");
         addProcessButton.setMaxWidth(Double.MAX_VALUE);
         addProcessButton.setOnAction(e -> showAddProcessDialog());
         
-        Button exampleButton = new Button("📝 Cargar Ejemplo");
+        Button exampleButton = new Button("Cargar Ejemplo");
         exampleButton.setMaxWidth(Double.MAX_VALUE);
         exampleButton.setOnAction(e -> loadExampleProcesses());
         
-        Button clearButton = new Button("🗑️ Limpiar Procesos");
+        Button clearButton = new Button("Limpiar Procesos");
         clearButton.setMaxWidth(Double.MAX_VALUE);
         clearButton.setOnAction(e -> clearProcesses());
         
@@ -320,7 +320,7 @@ public class SimulatorGUI extends Application {
     }
     
     /**
-     * Panel de memoria con visualización gráfica
+     * Panel de memoria con visualización grafica
      */
     private Node createMemoryPanel() {
         VBox vbox = new VBox(10);
@@ -334,8 +334,8 @@ public class SimulatorGUI extends Application {
         memoryStateArea.setStyle("-fx-font-family: monospaced;");
         stateBox.getChildren().add(memoryStateArea);
         
-        // Visualización gráfica de marcos
-        VBox gridBox = createBoxWithTitle("Marcos de Memoria (Visualización Gráfica)");
+        // Visualización grafica de marcos
+        VBox gridBox = createBoxWithTitle("Marcos de Memoria (Visualización Grafica)");
         ScrollPane scrollPane = new ScrollPane();
         memoryGrid = new GridPane();
         memoryGrid.setHgap(5);
@@ -403,21 +403,21 @@ public class SimulatorGUI extends Application {
         controlBox.setAlignment(Pos.CENTER);
         controlBox.setStyle("-fx-background-color: #f0f0f0; -fx-border-color: #cccccc; -fx-border-width: 1;");
         
-        startButton = new Button("▶️ Iniciar Simulación");
+        startButton = new Button("Iniciar Simulación");
         startButton.setStyle("-fx-font-size: 14; -fx-padding: 10;");
         startButton.setOnAction(e -> startSimulation());
         
-        pauseButton = new Button("⏸️ Pausar");
+        pauseButton = new Button("Pausar");
         pauseButton.setStyle("-fx-font-size: 14; -fx-padding: 10;");
         pauseButton.setDisable(true);
         pauseButton.setOnAction(e -> pauseSimulation());
         
-        stopButton = new Button("⏹️ Detener");
+        stopButton = new Button("Detener");
         stopButton.setStyle("-fx-font-size: 14; -fx-padding: 10;");
         stopButton.setDisable(true);
         stopButton.setOnAction(e -> stopSimulation());
         
-        resetButton = new Button("🔄 Reiniciar");
+        resetButton = new Button("Reiniciar");
         resetButton.setStyle("-fx-font-size: 14; -fx-padding: 10;");
         resetButton.setOnAction(e -> resetSimulation());
         
@@ -562,7 +562,7 @@ public class SimulatorGUI extends Application {
             currentProcess = controller.getScheduler().getNextProcess();
             
             if (currentProcess != null) {
-                // Preparar proceso: cargar páginas necesarias
+                // Preparar proceso: cargar paginas necesarias
                 boolean ready = prepareProcessForExecution(currentProcess);
                 
                 if (ready) {
@@ -614,7 +614,7 @@ public class SimulatorGUI extends Application {
                     controller.getMemoryManager().notifyProcessCPUUsage(currentProcess, executed);
                     controller.getGanttChart().addExecution(currentProcess.getPid(), currentTime, currentTime + executed);
                     
-                    // Verificar si completó la ráfaga
+                    // Verificar si completó la rafaga
                     if (currentBurst.getRemainingTime() <= 0) {
                         if (currentProcess.isCompleted()) {
                             // Proceso terminado
@@ -628,7 +628,7 @@ public class SimulatorGUI extends Application {
                             currentProcess = null;
                             quantumRemaining = 0;
                         } else {
-                            // Verificar siguiente ráfaga
+                            // Verificar siguiente rafaga
                             Burst nextBurst = currentProcess.getCurrentBurst();
                             if (nextBurst != null && nextBurst.getType() == Burst.BurstType.IO) {
                                 // Siguiente es E/S, bloquear inmediatamente
@@ -660,7 +660,7 @@ public class SimulatorGUI extends Application {
             idleTime++;
             controller.getGanttChart().addExecution("IDLE", currentTime, currentTime + 1);
             
-            // Debug: Ver por qué está idle cada 20 unidades
+            // Debug: Ver por qué esta idle cada 20 unidades
             if (currentTime % 20 == 0 && currentTime > 0) {
                 int readyCount = controller.getScheduler().getReadyQueue().size();
                 int ioBlocked = 0;
@@ -744,7 +744,7 @@ public class SimulatorGUI extends Application {
                 utilization = (totalCPUTime * 100.0) / currentTime;
             }
             cpuUtilLabel.setText(String.format("Utilización CPU: %.1f%%", utilization));
-            pageFaultsLabel.setText("Fallos de Página: " + 
+            pageFaultsLabel.setText("Fallos de Pagina: " + 
                 controller.getMemoryManager().getPageFaults());
         }
     }
@@ -823,17 +823,17 @@ public class SimulatorGUI extends Application {
     }
     
     /**
-     * Actualiza visualización gráfica de memoria
+     * Actualiza visualización grafica de memoria
      */
     private void updateMemoryGridVisual() {
         if (memoryFrameLabels == null || controller == null) return;
         
-        // Por ahora solo actualizamos con información básica
+        // Por ahora solo actualizamos con información basica
         // La información detallada se muestra en memoryStateArea
         int totalFrames = controller.getMemoryManager().getTotalFrames();
         int occupiedFrames = controller.getMemoryManager().getOccupiedFrameCount();
         
-        // Actualizar grid con colores básicos según ocupación
+        // Actualizar grid con colores basicos según ocupación
         for (int i = 0; i < memoryFrameLabels.length && i < totalFrames; i++) {
             Label label = memoryFrameLabels[i];
             
@@ -882,7 +882,7 @@ public class SimulatorGUI extends Application {
      */
     private void pauseSimulation() {
         simulationPaused = !simulationPaused;
-        pauseButton.setText(simulationPaused ? "▶️ Continuar" : "⏸️ Pausar");
+        pauseButton.setText(simulationPaused ? "Continuar" : "Pausar");
         appendLog(simulationPaused ? "Simulación pausada" : "Simulación reanudada");
     }
     
@@ -908,7 +908,7 @@ public class SimulatorGUI extends Application {
         SimulationClock.reset();
         controller = null;
         
-        // Limpiar áreas
+        // Limpiar areas
         cpuStateArea.setText("CPU IDLE");
         memoryStateArea.clear();
         ioStateArea.setText("No hay operaciones activas");
@@ -919,7 +919,7 @@ public class SimulatorGUI extends Application {
         
         timeLabel.setText("Tiempo: 0");
         cpuUtilLabel.setText("Utilización CPU: 0%");
-        pageFaultsLabel.setText("Fallos de Página: 0");
+        pageFaultsLabel.setText("Fallos de Pagina: 0");
         
         appendLog("Sistema reiniciado.");
     }
@@ -967,7 +967,7 @@ public class SimulatorGUI extends Application {
     }
     
     /**
-     * Muestra diálogo para agregar proceso manualmente
+     * Muestra dialogo para agregar proceso manualmente
      */
     private void showAddProcessDialog() {
         Dialog<Process> dialog = new Dialog<>();
@@ -992,11 +992,11 @@ public class SimulatorGUI extends Application {
         grid.add(pidField, 1, 0);
         grid.add(new Label("Tiempo de Llegada:"), 0, 1);
         grid.add(arrivalSpinner, 1, 1);
-        grid.add(new Label("Ráfagas (formato):"), 0, 2);
+        grid.add(new Label("Rafagas (formato):"), 0, 2);
         grid.add(burstsField, 1, 2);
         grid.add(new Label("Prioridad:"), 0, 3);
         grid.add(prioritySpinner, 1, 3);
-        grid.add(new Label("Páginas:"), 0, 4);
+        grid.add(new Label("Paginas:"), 0, 4);
         grid.add(pagesSpinner, 1, 4);
         
         dialog.getDialogPane().setContent(grid);
@@ -1013,7 +1013,7 @@ public class SimulatorGUI extends Application {
                     
                     return new Process(pid, arrival, bursts, priority, pages);
                 } catch (Exception e) {
-                    showAlert("Error", "Formato inválido: " + e.getMessage());
+                    showAlert("Error", "Formato invalido: " + e.getMessage());
                 }
             }
             return null;
@@ -1098,7 +1098,7 @@ public class SimulatorGUI extends Application {
     private void updateProcessList() {
         StringBuilder sb = new StringBuilder();
         sb.append(String.format("%-6s %-8s %-20s %-10s %-8s\n", 
-            "PID", "Llegada", "Ráfagas", "Prioridad", "Páginas"));
+            "PID", "Llegada", "Rafagas", "Prioridad", "Paginas"));
         sb.append("-".repeat(60)).append("\n");
         
         for (Process p : processList) {
@@ -1114,7 +1114,7 @@ public class SimulatorGUI extends Application {
     }
     
     /**
-     * Formatea ráfagas para mostrar
+     * Formatea rafagas para mostrar
      */
     private String formatBursts(List<Burst> bursts) {
         StringBuilder sb = new StringBuilder();

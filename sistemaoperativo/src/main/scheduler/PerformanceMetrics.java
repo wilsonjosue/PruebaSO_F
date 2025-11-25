@@ -10,7 +10,7 @@ import java.util.*;
  */
 public class PerformanceMetrics {
   
-  // Información por proceso
+  // Informacion por proceso
   private Map<String, ProcessMetrics> processMetrics;
   
   public PerformanceMetrics() {
@@ -29,7 +29,7 @@ public class PerformanceMetrics {
   }
   
   /**
-   * Registra el primer inicio de ejecución de un proceso
+   * Registra el primer inicio de ejecucion de un proceso
    */
   public void recordFirstExecution(Process process, int time) {
     String pid = process.getPid();
@@ -40,7 +40,7 @@ public class PerformanceMetrics {
   }
   
   /**
-   * Registra la finalización de un proceso
+   * Registra la finalizacion de un proceso
    */
   public void recordCompletion(Process process, int time) {
     String pid = process.getPid();
@@ -138,7 +138,7 @@ public class PerformanceMetrics {
     sb.append("\nDetalles por Proceso\n");
     for (ProcessMetrics metrics : processMetrics.values()) {
       if (metrics.completionTime != -1) {
-        sb.append(String.format("%s: Llegada=%d, Primera Ejecución=%d, Finalización=%d, " +
+        sb.append(String.format("%s: Llegada=%d, Primera Ejecucion=%d, Finalizacion=%d, " +
             "Espera=%d, Retorno=%d, Respuesta=%d\n",
             metrics.pid,
             metrics.arrivalTime,

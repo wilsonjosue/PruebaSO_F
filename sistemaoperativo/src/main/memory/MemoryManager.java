@@ -7,8 +7,8 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * Gestor de memoria virtual con soporte para reemplazo de páginas
- * Simula la memoria física dividida en marcos de página
+ * Gestor de memoria virtual con soporte para reemplazo de paginas
+ * Simula la memoria física dividida en marcos de pagina
  */
 public class MemoryManager {
   private List<PageFrame> frames;
@@ -21,7 +21,7 @@ public class MemoryManager {
   private int pageFaults;
   private int pageReplacements;
   private Map<String, Integer> processPageFaults;
-  private Map<String, Set<Integer>> pageTable; // Tabla de páginas por proceso
+  private Map<String, Set<Integer>> pageTable; // Tabla de paginas por proceso
 
   public MemoryManager(int totalFrames, PageReplacementAlgorithm algorithm) {
     if (totalFrames <= 0) {
@@ -47,8 +47,8 @@ public class MemoryManager {
   }
 
   /**
-   * Prepara la memoria para un proceso. Para demanda real sólo registramos el proceso
-   * y garantizamos que existe al menos una página inicial cargada si es necesario.
+   * Prepara la memoria para un proceso. Para demanda real solo registramos el proceso
+   * y garantizamos que existe al menos una pagina inicial cargada si es necesario.
    */
   public boolean loadPagesForProcess(Process process) {
     memoryLock.lock();
@@ -62,7 +62,7 @@ public class MemoryManager {
       }
 
       process.signalMemoryReady();
-      System.out.println(String.format("[MEMORIA] Proceso %s listo para ejecución", pid));
+      System.out.println(String.format("[MEMORIA] Proceso %s listo para ejecucion", pid));
       return true;
 
     } finally {
@@ -71,7 +71,7 @@ public class MemoryManager {
   }
 
   /**
-   * Carga bajo demanda una página específica si todavía no se encuentra en memoria.
+   * Carga bajo demanda una pagina específica si todavía no se encuentra en memoria.
    */
   public void ensurePageLoaded(Process process, int pageId) {
     if (process == null || pageId < 0) {
@@ -89,10 +89,10 @@ public class MemoryManager {
   }
 
   /**
-   * Carga una página específica en memoria
+   * Carga una pagina específica en memoria
    * 
    * @param processId ID del proceso
-   * @param pageId    ID de la página
+   * @param pageId    ID de la pagina
    */
   private void loadPageInternal(Process process, int pageId) {
     String processId = process.getPid();
@@ -113,15 +113,15 @@ public class MemoryManager {
         return;
       }
 
-      // Reemplazar la página
+      // Reemplazar la pagina
       PageFrame victimFrame = frames.get(frameIndex);
       String victimProcess = victimFrame.getProcessId();
       int victimPage = victimFrame.getPageId();
 
-      System.out.println(String.format("[MEMORIA] Reemplazando página %s-P%d con %s-P%d en Frame[%d]",
+      System.out.println(String.format("[MEMORIA] Reemplazando pagina %s-P%d con %s-P%d en Frame[%d]",
           victimProcess, victimPage, processId, pageId, frameIndex));
 
-      // Actualizar tabla de páginas de la víctima
+      // Actualizar tabla de paginas de la víctima
       if (pageTable.containsKey(victimProcess)) {
         pageTable.get(victimProcess).remove(victimPage);
       }
@@ -135,29 +135,29 @@ public class MemoryManager {
       pageReplacements++;
     }
 
-    // Cargar la nueva página
+    // Cargar la nueva pagina
     PageFrame frame = frames.get(frameIndex);
     frame.loadPage(processId, pageId, currentTime);
 
-    // Actualizar tabla de páginas
+    // Actualizar tabla de paginas
     pageTable.get(processId).add(pageId);
     process.addLoadedPage(pageId);
 
     // Notificar al algoritmo de reemplazo
     replacementAlgorithm.notifyPageLoaded(frameIndex, processId, pageId, currentTime);
 
-    // Registrar fallo de página
+    // Registrar fallo de pagina
     pageFaults++;
     processPageFaults.put(processId, processPageFaults.getOrDefault(processId, 0) + 1);
 
-    System.out.println(String.format("[MEMORIA] Página %s-P%d cargada en Frame[%d] - Fallo de página #%d",
+    System.out.println(String.format("[MEMORIA] Pagina %s-P%d cargada en Frame[%d] - Fallo de pagina #%d",
       processId, pageId, frameIndex, pageFaults));
   }
 
   /**
    * Busca un marco libre en memoria
    * 
-   * @return Índice del marco libre, o -1 si no hay ninguno
+   * @return Indice del marco libre, o -1 si no hay ninguno
    */
   private int findFreeFrame() {
     for (int i = 0; i < frames.size(); i++) {
@@ -169,11 +169,11 @@ public class MemoryManager {
   }
 
   /**
-   * Verifica si una página está cargada en memoria
+   * Verifica si una pagina esta cargada en memoria
    * 
    * @param processId ID del proceso
-   * @param pageId    ID de la página
-   * @return true si está cargada
+   * @param pageId    ID de la pagina
+   * @return true si esta cargada
    */
   public boolean isPageLoaded(String processId, int pageId) {
     memoryLock.lock();
@@ -190,7 +190,7 @@ public class MemoryManager {
   }
 
   /**
-   * Libera todas las páginas de un proceso
+   * Libera todas las paginas de un proceso
    * 
    * @param process Proceso a liberar
    */
@@ -199,9 +199,9 @@ public class MemoryManager {
     try {
       String pid = process.getPid();
 
-      System.out.println(String.format("\n[MEMORIA] Liberando páginas del proceso %s", pid));
+      System.out.println(String.format("\n[MEMORIA] Liberando paginas del proceso %s", pid));
 
-      // Liberar todos los marcos que contienen páginas de este proceso
+      // Liberar todos los marcos que contienen paginas de este proceso
       for (PageFrame frame : frames) {
         if (frame.isOccupied() && frame.getProcessId().equals(pid)) {
           System.out.println(String.format("[MEMORIA] Liberando Frame[%d] (%s-P%d)",
@@ -210,7 +210,7 @@ public class MemoryManager {
         }
       }
 
-      // Limpiar tabla de páginas
+      // Limpiar tabla de paginas
       pageTable.remove(pid);
       processRegistry.remove(pid);
       if (replacementAlgorithm instanceof OptimalPageReplacement) {
@@ -226,17 +226,17 @@ public class MemoryManager {
   }
 
   /**
-   * Accede a una página (actualiza información de acceso)
+   * Accede a una pagina (actualiza informacion de acceso)
    * 
    * @param processId ID del proceso
-   * @param pageId    ID de la página
+   * @param pageId    ID de la pagina
    */
   public void accessPage(String processId, int pageId) {
     memoryLock.lock();
     try {
       int currentTime = SimulationClock.getTime();
 
-      // Buscar el marco que contiene esta página
+      // Buscar el marco que contiene esta pagina
       for (int i = 0; i < frames.size(); i++) {
         PageFrame frame = frames.get(i);
         if (frame.isOccupied() &&
@@ -267,7 +267,7 @@ public class MemoryManager {
       sb.append(String.format("Marcos ocupados: %d\n", getOccupiedFrameCount()));
       sb.append(String.format("Marcos libres: %d\n", getFreeFrameCount()));
       sb.append(String.format("\nAlgoritmo: %s\n", replacementAlgorithm.getName()));
-      sb.append(String.format("Fallos de página: %d\n", pageFaults));
+      sb.append(String.format("Fallos de pagina: %d\n", pageFaults));
       sb.append(String.format("Reemplazos: %d\n", pageReplacements));
 
       sb.append("\nEstado de marcos:\n");
@@ -275,7 +275,7 @@ public class MemoryManager {
         sb.append(frame.toString()).append("\n");
       }
 
-      sb.append("\nTabla de páginas por proceso:\n");
+      sb.append("\nTabla de paginas por proceso:\n");
       for (Map.Entry<String, Set<Integer>> entry : pageTable.entrySet()) {
         sb.append(String.format("%s: %s\n", entry.getKey(), entry.getValue()));
       }
@@ -298,10 +298,10 @@ public class MemoryManager {
       sb.append("\n=== MÉTRICAS DE MEMORIA ===\n");
       sb.append(String.format("Algoritmo de reemplazo: %s\n", replacementAlgorithm.getName()));
       sb.append(String.format("Marcos totales: %d\n", totalFrames));
-      sb.append(String.format("Total de fallos de página: %d\n", pageFaults));
+      sb.append(String.format("Total de fallos de pagina: %d\n", pageFaults));
       sb.append(String.format("Total de reemplazos: %d\n", pageReplacements));
 
-      sb.append("\nFallos de página por proceso:\n");
+      sb.append("\nFallos de pagina por proceso:\n");
       for (Map.Entry<String, Integer> entry : processPageFaults.entrySet()) {
         sb.append(String.format("  %s: %d fallos\n", entry.getKey(), entry.getValue()));
       }
@@ -365,19 +365,19 @@ public class MemoryManager {
   }
 
   /**
-   * Notifica a memoria que un proceso consumió CPU para actualizar accesos
+   * Notifica a memoria que un proceso consumio CPU para actualizar accesos
    */
   public void notifyProcessCPUUsage(Process process, int executedUnits) {
     if (process == null || executedUnits <= 0) {
       return;
     }
 
-    // Cada unidad de CPU simula un acceso a una página
+    // Cada unidad de CPU simula un acceso a una pagina
     int pages = Math.max(1, process.getRequiredPages());
     int totalCpu = process.getTotalCPUTime();
     int remaining = process.getRemainingCPUTime();
 
-    // Cuánto CPU ya se ha ejecutado
+    // Cuanto CPU ya se ha ejecutado
     int executedSoFar = totalCpu - remaining;
 
     int firstIndex = Math.max(0, executedSoFar - executedUnits);

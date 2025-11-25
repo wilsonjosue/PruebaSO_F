@@ -3,8 +3,8 @@ package scheduler;
 import java.util.*;
 
 /**
- * Genera y almacena el diagrama de Gantt de la ejecución
- * Muestra qué proceso ejecutó en cada momento
+ * Genera y almacena el diagrama de Gantt de la ejecucion
+ * Muestra qué proceso ejecuto en cada momento
  */
 public class GanttChart {
   private final List<GanttEntry> entries;
@@ -18,7 +18,7 @@ public class GanttChart {
   }
 
   /**
-   * Registra la ejecución de un proceso en el tiempo actual
+   * Registra la ejecucion de un proceso en el tiempo actual
    */
   public void recordExecution(String processId, int startTime) {
     // Completar entrada anterior si existe
@@ -36,7 +36,7 @@ public class GanttChart {
   }
   
   /**
-   * Agrega una ejecución con tiempo de inicio y fin
+   * Agrega una ejecucion con tiempo de inicio y fin
    */
   public void addExecution(String processId, int startTime, int endTime) {
     // Si el proceso anterior es el mismo y continúa, extender su tiempo
@@ -74,7 +74,7 @@ public class GanttChart {
   }
 
   /**
-   * Representación del diagrama de Gantt
+   * Representacion del diagrama de Gantt
    */
   @Override
   public String toString() {
@@ -152,7 +152,7 @@ public class GanttChart {
   }
   
   /**
-   * Repite un carácter n veces
+   * Repite un caracter n veces
    */
   private String repeatChar(char c, int times) {
     StringBuilder sb = new StringBuilder();
