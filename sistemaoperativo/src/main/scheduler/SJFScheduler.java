@@ -1,3 +1,4 @@
+//src/main/scheduler/SJFScheduler.java
 package scheduler;
 
 import model.Process;
@@ -6,45 +7,100 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * Shortest Job First (SJF) - No apropiativo por defecto
+ * Shortest Job First (SJF) - apropiativo por defecto
  * Ejecuta primero el proceso con la rafaga de CPU mas corta.
  */
 public class SJFScheduler implements SchedulingAlgorithm {
   private final PriorityQueue<Process> readyQueue;
   private final PerformanceMetrics metrics;
   private final Lock queueLock;
+   private final Comparator<Process> comparator;
+  private final boolean autoReinsertOnInterrupt;
 
+  //Constructor por defecto: NO reinserta automáticamente procesos en onProcessInterrupted.
   public SJFScheduler() {
-    // Cola de prioridad ordenada por la proxima rafaga de CPU disponible
-    this.readyQueue = new PriorityQueue<>(
-        Comparator.comparingInt(SJFScheduler::getNextCPUBurstTime)
-            .thenComparingInt(Process::getArrivalTime));
+    this(false);
+  }
+
+    public SJFScheduler(boolean autoReinsertOnInterrupt) {
+    // Comparator estable: current CPU burst, arrivalTime, pid (para determinismo)
+    Comparator<Process> cmp = Comparator
+      .comparingInt((Process p) -> p.getCurrentCPUBurstTime())
+      .thenComparingInt(Process::getArrivalTime)
+      .thenComparing(Process::getPid);
+
+    // Guardar comparator en campo y usarlo para la PriorityQueue
+    this.comparator = cmp;
+    this.readyQueue = new PriorityQueue<>(cmp);
     this.metrics = new PerformanceMetrics();
     this.queueLock = new ReentrantLock();
+    this.autoReinsertOnInterrupt = autoReinsertOnInterrupt;
   }
 
   @Override
   public Process getNextProcess() {
     queueLock.lock();
-    try {
+    try { 
       return readyQueue.poll();
-    } finally {
+    } finally { 
       queueLock.unlock();
     }
   }
 
   @Override
   public void addProcess(Process process) {
+    // Antes de encolar: sólo aceptar procesos que estén realmente en READY
+    if (process == null) return;
     queueLock.lock();
     try {
-        readyQueue.offer(process);
-        System.out.println("SJF: Proceso " + process.getPid() +
-          " agregado. Proxima rafaga: " + getNextCPUBurstTime(process) +
+      // Evitar duplicados y forzar re-heapify si el proceso ya estaba
+      readyQueue.remove(process);
+      readyQueue.offer(process);
+      System.out.println("SJF: Proceso " + process.getPid() +
+          " agregado/reordenado. Proxima rafaga: " + process.getCurrentCPUBurstTime() +
           ". Tamaño cola: " + readyQueue.size());
     } finally {
       queueLock.unlock();
     }
     metrics.recordArrival(process);
+  }
+  /**
+   * Actualiza la prioridad de un proceso que ya está en la cola.
+   * Debe llamarse cuando cambie el tiempo restante (por ejemplo,
+   * si hay un ajuste externo que modifica las ráfagas mientras está en la cola).
+   *
+   * @param process proceso cuya prioridad cambió
+   * @return true si el proceso existía en la cola y fue re-colocado; false si no estaba
+   */
+  public boolean updateProcessPriority(Process process) {
+    queueLock.lock();
+    try {
+      boolean existed = readyQueue.remove(process);
+      if (existed) {
+        readyQueue.offer(process); // reinsertar para re-heapify
+        System.out.println("SJF: Prioridad actualizada para " + process.getPid() +
+            " (nueva rafaga: " + process.getCurrentCPUBurstTime() + ")");
+      }
+      return existed;
+    } finally {
+      queueLock.unlock();
+    }
+  }
+
+  /**
+   * Elimina un proceso de la cola si está presente.
+   */
+  public boolean removeProcess(Process process) {
+    queueLock.lock();
+    try {
+      boolean removed = readyQueue.remove(process);
+      if (removed) {
+        System.out.println("SJF: Proceso " + process.getPid() + " removido de la cola");
+      }
+      return removed;
+    } finally {
+      queueLock.unlock();
+    }
   }
 
   @Override
@@ -56,19 +112,25 @@ public class SJFScheduler implements SchedulingAlgorithm {
     System.out.println("SJF: Proceso " + process.getPid() + " completado");
   }
 
-  @Override
+    @Override
   public void onProcessInterrupted(Process process) {
-    if (process != null && process.getRemainingCPUTime() > 0) {
-      queueLock.lock();
-      try {
-        readyQueue.offer(process);
-        System.out.println("SJF: Proceso " + process.getPid() + " reinsertado");
-      } finally {
-        queueLock.unlock();
-      }
+    // Control de reinsercion configurable:
+    // - Si autoReinsertOnInterrupt == true, reinserta (ej. si interrupcion por quantum)
+    // - Si false (por defecto) no reinserta: se espera que Dispatcher/MemoryManager
+    //   re-agregue el proceso cuando realmente esté listo (recomendado para I/O/page-fault).
+    if (process == null) {
+      System.out.println("SJF: onProcessInterrupted recibido null");
+      return;
+    }
+
+    if (process.getRemainingCPUTime() > 0 && autoReinsertOnInterrupt) {
+      addProcess(process); // addProcess ya gestiona los locks internamente
+      System.out.println("SJF: Proceso " + process.getPid() + " reinsertado por interrupcion");
+    } else {
+      System.out.println("SJF: Proceso " + process.getPid() + " interrumpido (no reinsertado automáticamente)");
     }
   }
-  
+
   @Override
   public void onProcessStarted(Process process) {
     metrics.recordFirstExecution(process, SimulationClock.getTime());
@@ -83,8 +145,10 @@ public class SJFScheduler implements SchedulingAlgorithm {
   public List<Process> getReadyQueue() {
     queueLock.lock();
     try {
+      // Devuelve lista ordenada sin alterar la PriorityQueue original
       List<Process> sortedList = new ArrayList<>(readyQueue);
-      sortedList.sort(Comparator.comparingInt(Process::getRemainingCPUTime));
+      // Usar comparator guardado para evitar NullPointerException
+      sortedList.sort(comparator);
       return sortedList;
     } finally {
       queueLock.unlock();
@@ -93,7 +157,7 @@ public class SJFScheduler implements SchedulingAlgorithm {
 
   @Override
   public boolean isPreemptive() {
-    return false;
+    return autoReinsertOnInterrupt;
   }
 
   @Override
@@ -104,14 +168,5 @@ public class SJFScheduler implements SchedulingAlgorithm {
   @Override
   public PerformanceMetrics getPerformanceMetrics() {
     return metrics;
-  }
-
-  private static int getNextCPUBurstTime(Process process) {
-    int nextBurst = process.getCurrentCPUBurstTime();
-    if (nextBurst > 0) {
-      return nextBurst;
-    }
-    // Fallback para procesos que no tienen rafaga de CPU inmediata
-    return Math.max(1, process.getRemainingCPUTime());
   }
 }

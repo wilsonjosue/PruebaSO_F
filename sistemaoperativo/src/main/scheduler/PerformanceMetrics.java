@@ -1,3 +1,4 @@
+//src/main/scheduler/PerformanceMetrics.java
 package scheduler;
 
 import model.Process;
@@ -17,9 +18,7 @@ public class PerformanceMetrics {
     this.processMetrics = new HashMap<>();
   }
   
-  /**
-   * Registra la llegada de un proceso
-   */
+  //Registra la llegada de un proceso
   public void recordArrival(Process process) {
     String pid = process.getPid();
     if (!processMetrics.containsKey(pid)) {
@@ -28,9 +27,7 @@ public class PerformanceMetrics {
     }
   }
   
-  /**
-   * Registra el primer inicio de ejecucion de un proceso
-   */
+  //Registra el primer inicio de ejecucion de un proceso
   public void recordFirstExecution(Process process, int time) {
     String pid = process.getPid();
     ProcessMetrics metrics = processMetrics.get(pid);
@@ -39,9 +36,7 @@ public class PerformanceMetrics {
     }
   }
   
-  /**
-   * Registra la finalizacion de un proceso
-   */
+  //Registra la finalizacion de un proceso
   public void recordCompletion(Process process, int time) {
     String pid = process.getPid();
     ProcessMetrics metrics = processMetrics.get(pid);
@@ -50,9 +45,7 @@ public class PerformanceMetrics {
     }
   }
   
-  /**
-   * Obtiene el tiempo de espera promedio
-   */
+  //Obtiene el tiempo de espera promedio
   public double getAverageWaitingTime() {
     if (processMetrics.isEmpty()) return 0.0;
     
@@ -71,9 +64,7 @@ public class PerformanceMetrics {
     return count > 0 ? totalWait / count : 0.0;
   }
   
-  /**
-   * Obtiene el tiempo de retorno promedio
-   */
+  //Obtiene el tiempo de retorno promedio
   public double getAverageTurnaroundTime() {
     if (processMetrics.isEmpty()) return 0.0;
     
@@ -91,9 +82,7 @@ public class PerformanceMetrics {
     return count > 0 ? totalTurnaround / count : 0.0;
   }
   
-  /**
-   * Obtiene el tiempo de respuesta promedio
-   */
+  //Obtiene el tiempo de respuesta promedio
   public double getAverageResponseTime() {
     if (processMetrics.isEmpty()) return 0.0;
     
@@ -111,9 +100,7 @@ public class PerformanceMetrics {
     return count > 0 ? totalResponse / count : 0.0;
   }
   
-  /**
-   * Obtiene el número de procesos completados
-   */
+  // Obtiene el número de procesos completados
   public int getCompletedProcessCount() {
     int count = 0;
     for (ProcessMetrics metrics : processMetrics.values()) {
@@ -124,9 +111,7 @@ public class PerformanceMetrics {
     return count;
   }
   
-  /**
-   * Genera reporte detallado de métricas
-   */
+  //Genera reporte detallado de métricas
   public String generateReport() {
     StringBuilder sb = new StringBuilder();
     sb.append("\nMÉTRICAS DE RENDIMIENTO\n");
@@ -153,9 +138,7 @@ public class PerformanceMetrics {
     return sb.toString();
   }
   
-  /**
-   * Clase interna para almacenar métricas de un proceso individual
-   */
+  //Clase interna para almacenar métricas de un proceso individual
   private static class ProcessMetrics {
     String pid;
     int arrivalTime;
@@ -198,9 +181,8 @@ public class PerformanceMetrics {
     }
   }
   
-  /**
-   * Registra tiempo de CPU ejecutado para un proceso
-   */
+  //Registra tiempo de CPU ejecutado para un proceso
+
   public void addCPUTime(Process process, int cpuTime) {
     String pid = process.getPid();
     ProcessMetrics metrics = processMetrics.get(pid);
@@ -209,9 +191,7 @@ public class PerformanceMetrics {
     }
   }
   
-  /**
-   * Resetea todas las métricas
-   */
+  //Resetea todas las métricas
   public void reset() {
     processMetrics.clear();
   }

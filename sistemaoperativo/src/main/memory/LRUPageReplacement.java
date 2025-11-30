@@ -1,3 +1,4 @@
+//src/main/memory/LRUPageReplacement.java
 package memory;
 
 import java.util.List;
@@ -31,25 +32,27 @@ public class LRUPageReplacement implements PageReplacementAlgorithm {
         }
       }
     }
-    
     // Limpiar el registro del marco víctima
     if (victimIndex != -1) {
       lastAccessTime.remove(victimIndex);
     }
-    
     return victimIndex;
   }
-  
+
   @Override
   public void notifyPageAccess(int frameIndex, String processId, int pageId, int currentTime) {
     // Actualizar el tiempo de último acceso
     lastAccessTime.put(frameIndex, currentTime);
   }
-  
   @Override
   public void notifyPageLoaded(int frameIndex, String processId, int pageId, int currentTime) {
     // Registrar el tiempo de carga como tiempo de acceso inicial
     lastAccessTime.put(frameIndex, currentTime);
+  }
+  @Override
+  public void notifyPageUnloaded(int frameIndex) {
+    // Limpiar registro del marco liberado
+    lastAccessTime.remove(frameIndex);
   }
   
   @Override

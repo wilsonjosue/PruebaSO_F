@@ -1,3 +1,4 @@
+//src/main/simulation/SimulationController.java
 package simulation;
 
 import model.Process;
@@ -172,6 +173,15 @@ public class SimulationController {
             System.out.println(String.format("[CPU] Quantum agotado para %s, reinsertando",
                 currentProcess.getPid()));
             scheduler.onProcessInterrupted(currentProcess);
+            // Comprobación de advertencia: si el scheduler es preemptive, debería
+            // reinsertar el proceso en su propia cola.
+            if (currentProcess.getRemainingCPUTime() > 0) {
+              List<Process> rq = scheduler.getReadyQueue();
+              if (!rq.contains(currentProcess)) {
+                System.out.println(String.format("[WARN] El scheduler %s NO reinsertó %s tras la interrupción (isPreemptive=true).",
+                    scheduler.getClass().getSimpleName(), currentProcess.getPid()));
+              }
+            }
             currentProcess.setState(Process.ProcessState.READY);
             ganttChart.addEvent(currentTime + executed,
                 currentProcess.getPid() + " -> QUANTUM");
@@ -272,7 +282,6 @@ public class SimulationController {
   }
   
   // Getters
-  
   public List<Process> getAllProcesses() {
     return new ArrayList<>(allProcesses);
   }

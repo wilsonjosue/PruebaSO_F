@@ -1,3 +1,4 @@
+//src/main/model/Process.java
 package model;
 
 import java.util.List;
@@ -7,6 +8,8 @@ import java.util.HashSet;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.Condition;
+import java.util.Collections;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Representa un proceso en el sistema operativo simulado
@@ -54,7 +57,7 @@ public class Process implements Runnable {
     
     // Inicializar paginas (IDs consecutivos desde 0)
     this.pageIds = new HashSet<>();
-    this.loadedPages = new HashSet<>();
+    this.loadedPages = Collections.newSetFromMap(new ConcurrentHashMap<>());
     for (int i = 0; i < requiredPages; i++) {
       pageIds.add(i);
     }
@@ -183,13 +186,23 @@ public class Process implements Runnable {
   }
 
   public ProcessState getState() {
-    return state;
+    lock.lock();
+    try {
+      return this.state;
+    } finally {
+      lock.unlock();
+    }
   }
 
   public void setState(ProcessState state) {
-    this.state = state;
+    lock.lock();
+    try {
+      this.state = state;
+    } finally {
+      lock.unlock();
+    }
   }
-  
+  //concurrentes no es necesario bloquearlos
   public Set<Integer> getPageIds() {
     return new HashSet<>(pageIds);
   }
@@ -219,50 +232,97 @@ public class Process implements Runnable {
   }
   
   // Métricas
-  
   public int getCompletionTime() {
-    return completionTime;
+    lock.lock();
+    try {
+      return completionTime;
+    } finally {
+      lock.unlock();
+    }
   }
-  
+
   public void setCompletionTime(int completionTime) {
-    this.completionTime = completionTime;
+    lock.lock();
+    try {
+      this.completionTime = completionTime;
+    } finally {
+      lock.unlock();
+    }
   }
-  
+
   public int getWaitingTime() {
-    return waitingTime;
+    lock.lock();
+    try {
+      return waitingTime;
+    } finally {
+      lock.unlock();
+    }
   }
   
   public void setWaitingTime(int waitingTime) {
-    this.waitingTime = waitingTime;
+    lock.lock();
+    try {
+      this.waitingTime = waitingTime;
+    } finally {
+      lock.unlock();
+    }
   }
   
   public int getTurnaroundTime() {
-    return turnaroundTime;
+    lock.lock();
+    try {
+      return turnaroundTime;
+    } finally {
+      lock.unlock();
+    }
   }
   
   public void setTurnaroundTime(int turnaroundTime) {
-    this.turnaroundTime = turnaroundTime;
+    lock.lock();
+    try {
+      this.turnaroundTime = turnaroundTime;
+    } finally {
+      lock.unlock();
+    }
   }
   
   public int getResponseTime() {
-    return responseTime;
+    lock.lock();
+    try {
+      return responseTime;
+    } finally {
+      lock.unlock();
+    }
   }
   
   public void setResponseTime(int responseTime) {
-    this.responseTime = responseTime;
+    lock.lock();
+    try {
+      this.responseTime = responseTime;
+    } finally {
+      lock.unlock();
+    }
   }
   
   public int getFirstExecutionTime() {
-    return firstExecutionTime;
+    lock.lock();
+    try {
+      return firstExecutionTime;
+    } finally {
+      lock.unlock();
+    }
   }
   
   public void setFirstExecutionTime(int firstExecutionTime) {
-    this.firstExecutionTime = firstExecutionTime;
+    lock.lock();
+    try {
+      this.firstExecutionTime = firstExecutionTime;
+    } finally {
+      lock.unlock();
+    } 
   }
 
-  /**
-   * Obtiene el tiempo total de CPU que necesita el proceso
-   */
+  //Obtiene el tiempo total de CPU que necesita el proceso
   public int getTotalCPUTime() {
     int total = 0;
     for (Burst burst : bursts) {
@@ -273,9 +333,7 @@ public class Process implements Runnable {
     return total;
   }
 
-  /**
-   * Obtiene el tiempo restante de CPU
-   */
+  //Obtiene el tiempo restante de CPU
   public int getRemainingCPUTime() {
     int remaining = 0;
     for (int i = currentBurstIndex; i < bursts.size(); i++) {
@@ -287,9 +345,7 @@ public class Process implements Runnable {
     return remaining;
   }
 
-  /**
-   * Obtiene la rafaga actual de CPU (tiempo restante)
-   */
+  //Obtiene la rafaga actual de CPU (tiempo restante)
   public int getCurrentCPUBurstTime() {
     if (currentBurstIndex < bursts.size()) {
       Burst current = bursts.get(currentBurstIndex);
@@ -300,9 +356,7 @@ public class Process implements Runnable {
     return 0;
   }
 
-  /**
-   * Obtiene la rafaga actual
-   */
+  //Obtiene la rafaga actual
   public Burst getCurrentBurst() {
     if (currentBurstIndex < bursts.size()) {
       return bursts.get(currentBurstIndex);
@@ -332,9 +386,7 @@ public class Process implements Runnable {
     return executed;
   }
 
-  /**
-   * Completa la rafaga actual y pasa a la siguiente
-   */
+  //Completa la rafaga actual y pasa a la siguiente
   public void completeCurrentBurst() {
     if (currentBurstIndex < bursts.size()) {
       bursts.get(currentBurstIndex).setRemainingTime(0);
@@ -342,9 +394,7 @@ public class Process implements Runnable {
     }
   }
   
-  /**
-   * Reinicia el índice de burst actual (para simulaciones)
-   */
+  //Reinicia el índice de burst actual (para simulaciones)
   public void resetBursts() {
     currentBurstIndex = 0;
     for (Burst burst : bursts) {
@@ -352,16 +402,12 @@ public class Process implements Runnable {
     }
   }
 
-  /**
-   * Verifica si el proceso ha completado todas sus rafagas
-   */
+  //Verifica si el proceso ha completado todas sus rafagas
   public boolean isCompleted() {
     return currentBurstIndex >= bursts.size();
   }
 
-  /**
-   * Verifica si la siguiente rafaga es de E/S
-   */
+  //Verifica si la siguiente rafaga es de E/S
   public boolean isNextBurstIO() {
     if (currentBurstIndex < bursts.size()) {
       Burst next = bursts.get(currentBurstIndex);
@@ -370,9 +416,7 @@ public class Process implements Runnable {
     return false;
   }
 
-  /**
-   * Obtiene el tiempo de la proxima rafaga de E/S
-   */
+  //Obtiene el tiempo de la proxima rafaga de E/S
   public int getNextIOBurstTime() {
     if (currentBurstIndex < bursts.size()) {
       Burst next = bursts.get(currentBurstIndex);
@@ -385,8 +429,13 @@ public class Process implements Runnable {
 
   @Override
   public String toString() {
-    return String.format("Process[%s, Arrival: %d, State: %s, Bursts: %d]",
-        pid, arrivalTime, state, bursts.size());
+    lock.lock();
+    try {
+      return String.format("Process[%s, Arrival: %d, State: %s, Bursts: %d]",
+          pid, arrivalTime, state, bursts.size());
+    } finally {
+      lock.unlock();
+    }
   }
 
   @Override

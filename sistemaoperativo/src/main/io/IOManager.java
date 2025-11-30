@@ -1,3 +1,4 @@
+//src/main/io/IOManager.java
 package io;
 
 import model.Process;
@@ -53,44 +54,43 @@ public class IOManager {
     }
   }
   
-  /**
+   /**
    * Actualiza las operaciones de E/S en curso y completa las que terminaron
-   * 
    * @return Lista de procesos que completaron su E/S
+   * NOTA: updateIOOperations NO debe cambiar el estado del proceso ni encolar al scheduler.
+   * Esa responsabilidad la realiza el SynchronizationCoordinator para evitar duplicidad.
    */
   public List<Process> updateIOOperations(List<Process> allProcesses) {
     ioLock.lock();
     try {
       List<Process> completedProcesses = new ArrayList<>();
       int currentTime = SimulationClock.getTime();
-      
+
       Iterator<Map.Entry<String, IOOperation>> iterator = activeOperations.entrySet().iterator();
       while (iterator.hasNext()) {
         Map.Entry<String, IOOperation> entry = iterator.next();
         IOOperation operation = entry.getValue();
-        
+
         if (currentTime >= operation.getEndTime()) {
           // La operacion de E/S ha terminado
           String pid = entry.getKey();
-          
           // Buscar el proceso correspondiente
           Process process = findProcess(allProcesses, pid);
           if (process != null) {
+            // Señal al proceso: su E/S terminó. El Coordinator será responsable de re-enqueue.
             process.signalIOComplete();
-            process.setState(Process.ProcessState.READY);
             completedProcesses.add(process);
-            
             System.out.println(String.format("[E/S] Proceso %s completo operacion de E/S en t=%d",
                 pid, currentTime));
           }
-          
+
           completedIOOperations++;
           iterator.remove();
         }
       }
-      
+
       return completedProcesses;
-      
+
     } finally {
       ioLock.unlock();
     }

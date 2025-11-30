@@ -1,3 +1,4 @@
+//src/main/memory/OptimalPageReplacement.java
 package memory;
 
 import java.util.List;
@@ -111,18 +112,20 @@ public class OptimalPageReplacement implements PageReplacementAlgorithm {
     // Aquí avanzamos el puntero SOLO si hay un acceso real
     advancePointerOnRealAccess(processId);
   }
-
   @Override
   public void notifyPageLoaded(int frameIndex, String processId, int pageId, int currentTime) {
     // No se requiere accion
   }
-
+  @Override
+  public void notifyPageUnloaded(int frameIndex) {
+    // No es necesario hacer nada en la versión óptima corregida
+    // (las estructuras se basan en futureAccesses por proceso, no por frameIndex).
+  }
   @Override
   public void reset() {
     futureAccesses.clear();
     currentPositions.clear();
   }
-
   @Override
   public String getName() {
     return "Optimal (Corregido)";

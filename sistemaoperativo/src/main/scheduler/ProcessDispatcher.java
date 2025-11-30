@@ -1,8 +1,10 @@
+//src/main/scheduler/ProcessDispatcher.java
 package scheduler;
 
 import model.Process;
 import model.Burst;
 import java.util.*;
+//import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Dispatcher principal que coordina la ejecucion de procesos
@@ -12,11 +14,13 @@ public class ProcessDispatcher {
   private final SchedulingAlgorithm scheduler;
   private final GanttChart ganttChart;
   private final List<Process> allProcesses;
+  //private final Set<Integer> loadedPages;
 
   public ProcessDispatcher(SchedulingAlgorithm scheduler) {
     this.scheduler = scheduler;
     this.ganttChart = new GanttChart();
     this.allProcesses = new ArrayList<>();
+    //this.loadedPages = ConcurrentHashMap.newKeySet();
   }
 
   /**
@@ -125,6 +129,15 @@ public class ProcessDispatcher {
               currentTime, currentProcess.getPid()));
           currentProcess.setState(Process.ProcessState.READY);
           scheduler.onProcessInterrupted(currentProcess);
+          
+          // COMPROBACIÓN DE ADVERTENCIA: verificar si el scheduler reinsertó al proceso
+          if (currentProcess.getRemainingCPUTime() > 0) {
+            List<Process> rq = scheduler.getReadyQueue();
+            if (!rq.contains(currentProcess)) {
+              System.out.println(String.format("[WARN] El scheduler %s NO reinsertó %s tras la interrupción (isPreemptive=true).",
+                  scheduler.getClass().getSimpleName(), currentProcess.getPid()));
+            }
+          }
           currentProcess = null;
           quantumUsed = 0;
         }

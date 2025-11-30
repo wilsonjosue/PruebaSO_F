@@ -1,3 +1,4 @@
+//src/main/scheduler/SchedulerFactory.java
 package scheduler;
 
 /**
@@ -8,7 +9,6 @@ public class SchedulerFactory {
 
   /**
    * Crea un scheduler basado en el tipo especificado
-   * 
    * @param type    Tipo de scheduler (FCFS, SJF, RR)
    * @param quantum Quantum para Round Robin (ignorado para otros)
    * @return Instancia del scheduler
@@ -40,9 +40,7 @@ public class SchedulerFactory {
     }
   }
 
-  /**
-   * Crea scheduler con quantum por defecto para RR
-   */
+  //Crea scheduler con quantum por defecto para RR
   public static SchedulingAlgorithm createScheduler(String type) {
     return createScheduler(type, 4); // Quantum por defecto: 4
   }

@@ -1,3 +1,4 @@
+//src/main/memory/MemoryManager.java
 package memory;
 
 import model.Process;
@@ -51,23 +52,31 @@ public class MemoryManager {
    * y garantizamos que existe al menos una pagina inicial cargada si es necesario.
    */
   public boolean loadPagesForProcess(Process process) {
+    boolean ready = false;
+    String pid = process.getPid();
+
     memoryLock.lock();
+
     try {
-      String pid = process.getPid();
       registerProcessIfNeeded(process);
       pageTable.putIfAbsent(pid, new HashSet<>());
 
       if (process.getRequiredPages() > 0) {
-        ensurePageLoadedInternal(process, 0);
+        ensurePageLoadedInternal(process, 0); // puede realizar reemplazos dentro de memoryLock
       }
 
-      process.signalMemoryReady();
-      System.out.println(String.format("[MEMORIA] Proceso %s listo para ejecucion", pid));
-      return true;
-
+      // marcar localmente que todo salió bien (no llamar a métodos externos aquí)
+      ready = true;
     } finally {
       memoryLock.unlock();
     }
+
+    // Llamadas fuera del lock para evitar deadlocks (process.signalMemoryReady adquiere process.lock)
+    if (ready) {
+      process.signalMemoryReady();
+      System.out.println(String.format("[MEMORIA] Proceso %s listo para ejecucion", pid));
+    }
+    return ready;
   }
 
   /**
@@ -90,7 +99,6 @@ public class MemoryManager {
 
   /**
    * Carga una pagina específica en memoria
-   * 
    * @param processId ID del proceso
    * @param pageId    ID de la pagina
    */
@@ -133,6 +141,13 @@ public class MemoryManager {
 
       victimFrame.unloadPage();
       pageReplacements++;
+      // NOTIFICAR AL ALGORITMO que el marco fue liberado (limpiar estado interno)
+      try {
+        replacementAlgorithm.notifyPageUnloaded(frameIndex);
+      } catch (Exception e) {
+        // defensivo: no dejar que un algoritmo mal implementado rompa la simulación
+        System.err.println("[MEMORIA] Warning: notifyPageUnloaded falló: " + e.getMessage());
+      }
     }
 
     // Cargar la nueva pagina
@@ -156,7 +171,6 @@ public class MemoryManager {
 
   /**
    * Busca un marco libre en memoria
-   * 
    * @return Indice del marco libre, o -1 si no hay ninguno
    */
   private int findFreeFrame() {
@@ -170,7 +184,6 @@ public class MemoryManager {
 
   /**
    * Verifica si una pagina esta cargada en memoria
-   * 
    * @param processId ID del proceso
    * @param pageId    ID de la pagina
    * @return true si esta cargada
@@ -191,7 +204,6 @@ public class MemoryManager {
 
   /**
    * Libera todas las paginas de un proceso
-   * 
    * @param process Proceso a liberar
    */
   public void freePagesForProcess(Process process) {
@@ -207,6 +219,12 @@ public class MemoryManager {
           System.out.println(String.format("[MEMORIA] Liberando Frame[%d] (%s-P%d)",
               frame.getFrameId(), pid, frame.getPageId()));
           frame.unloadPage();
+          // Notificar al algoritmo la liberación del marco
+          try {
+            replacementAlgorithm.notifyPageUnloaded(frame.getFrameId());
+          } catch (Exception e) {
+            System.err.println("[MEMORIA] Warning: notifyPageUnloaded falló durante freePagesForProcess: " + e.getMessage());
+          }
         }
       }
 
@@ -227,7 +245,6 @@ public class MemoryManager {
 
   /**
    * Accede a una pagina (actualiza informacion de acceso)
-   * 
    * @param processId ID del proceso
    * @param pageId    ID de la pagina
    */
@@ -255,7 +272,6 @@ public class MemoryManager {
 
   /**
    * Obtiene el estado actual de la memoria
-   * 
    * @return String con el estado de todos los marcos
    */
   public String getMemoryState() {
@@ -288,7 +304,6 @@ public class MemoryManager {
 
   /**
    * Obtiene métricas de memoria
-   * 
    * @return String con las métricas
    */
   public String getMemoryMetrics() {

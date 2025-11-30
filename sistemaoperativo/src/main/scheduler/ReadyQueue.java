@@ -1,3 +1,4 @@
+//src/main/scheduler/ReadyQueue.java
 package scheduler;
 
 import model.Process;
@@ -34,7 +35,7 @@ public class ReadyQueue {
     }
   }
 
-  /**
+  /**Si se llama desde afuera tiene que usar try{}finally {}
    * Obtiene y remueve el primer proceso de la cola
    * Si la cola esta vacía, bloquea hasta que haya procesos
    */
